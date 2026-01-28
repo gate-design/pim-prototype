@@ -1,0 +1,94 @@
+/**
+ * PIM Design System — Design tokens
+ * Source: Nest UI Kit (Figma)
+ * Use these variables across all pages and components.
+ */
+
+:root {
+  /* ——— Legacy / existing (kept for compatibility) ——— */
+  --color-primary-500: #3d66b0;
+  --color-primary-200: #ecf0f7;
+  --color-foreground-disabled: #e3e3e3;
+  --color-background-muted: #fafafa;
+  --color-foreground: #1a1a1a;
+  --color-foreground-secondary: #6b6b6b;
+  --color-surface: #ffffff;
+  --font-heading: "Montserrat", system-ui, sans-serif;
+  --font-body: "Montserrat", system-ui, sans-serif;
+  --heading-4-size: 32px;
+  --heading-4-weight: 700;
+  --heading-4-line-height: 1.3;
+  --body-medium-size: 14px;
+  --body-medium-weight: 400;
+  --body-medium-line-height: 1.3;
+}
+
+:root {
+  /* ——— Nest UI Kit — Figma variables ——— */
+  --color-foreground-light: #ffffff;
+  --color-foreground-default: #000000;
+  --color-foreground-subtle: #f2f2f2;
+  --color-background-default: #ffffff;
+  --color-background-disabled: #e3e3e3;
+  --color-background-neutral: #656565;
+
+  /* Brand (primary_a = accent) */
+  --color-brand-primary: #e91207;
+  --color-brand-primary-hover: #d44316;
+  --color-brand-primary-active: #c13a14;
+  --color-brand-primary-disabled: #fdd0ce;
+  --color-brand-primary-foreground: #ffffff;
+  --color-brand-primary-foreground-disabled: #9ca3af;
+
+  /* Brand secondary / alt / ghost (primary_b = dark blue) */
+  --color-brand-secondary: #3d66b0;
+  --color-brand-secondary-hover: #ecf0f7;
+  --color-brand-secondary-active: #d6e0ed;
+  --color-brand-secondary-muted: #e3e3e3;
+  --color-brand-secondary-foreground: #3d66b0;
+  --color-brand-secondary-foreground-disabled: #9ca3af;
+  --color-brand-ghost-foreground: #3d66b0;
+  --color-brand-ghost-hover: #ecf0f7;
+  --color-brand-ghost-active: #d6e0ed;
+
+  /* Negative (destructive) */
+  --color-negative-primary: #be2d2e;
+  --color-negative-primary-hover: #a30809;
+  --color-negative-primary-active: #8c0708;
+  --color-negative-primary-disabled: #feeceb;
+  --color-negative-primary-foreground: #ffffff;
+  --color-negative-primary-foreground-disabled: #9ca3af;
+  --color-negative-secondary-border: #be2d2e;
+  --color-negative-secondary-hover: #feeceb;
+  --color-negative-ghost-foreground: #be2d2e;
+  --color-negative-ghost-hover: #feeceb;
+
+  /* Positive (success) */
+  --color-positive-primary: #328376;
+  --color-positive-primary-hover: #2a6f63;
+  --color-positive-primary-active: #235a50;
+  --color-positive-primary-disabled: #d1eae5;
+  --color-positive-primary-foreground: #ffffff;
+  --color-positive-primary-foreground-disabled: #9ca3af;
+
+  /* Focus ring */
+  --color-focus-brand: #3d66b0;
+  --color-focus-negative: #be2d2e;
+  --color-focus-positive: #328376;
+  --outline-focus-width: 2px;
+
+  /* Button sizes (height in px) */
+  --btn-height-large: 48px;
+  --btn-height-medium: 40px;
+  --btn-height-small: 32px;
+  --btn-height-xsmall: 24px;
+  --btn-padding-x-large: 24px;
+  --btn-padding-x-medium: 20px;
+  --btn-padding-x-small: 16px;
+  --btn-padding-x-xsmall: 12px;
+  --btn-border-radius: 9999px; /* pill-shaped per Nest UI Kit */
+  --btn-border-radius-icon: 50%;
+  --btn-font-size-medium: 16px;
+  --btn-font-size-small: 12px;
+  --btn-font-weight: 500; /* medium */
+}

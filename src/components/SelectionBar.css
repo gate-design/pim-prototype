@@ -1,0 +1,60 @@
+/* Selection bar — pill-shaped floating bar, aligned with Figma (node 9753-61892) */
+
+@keyframes selection-bar-slide-up {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.selection-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 12px 12px 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-foreground-disabled);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  font-family: var(--font-body);
+  font-size: 14px;
+  flex-wrap: nowrap;
+  width: fit-content;
+  animation: selection-bar-slide-up 0.25s ease-out;
+}
+
+.selection-bar__count {
+  display: flex;
+  width: fit-content;
+  height: fit-content;
+  font-weight: 500;
+  color: var(--color-foreground);
+  margin-right: 4px;
+}
+
+/* Action buttons (Clear, Pin, Clone, Manage rate, Archive) — ghost buttons with custom padding */
+.selection-bar__btn {
+  padding: 12px 8px;
+}
+
+/* Publish — primary pill button, separated from links */
+.selection-bar__publish {
+  height: 32px;
+  padding: 8px;
+  gap: 4px;
+  margin-left: 0;
+  flex-shrink: 0;
+}
+
+.selection-bar__publish .btn__label {
+  font-size: 12px;
+}

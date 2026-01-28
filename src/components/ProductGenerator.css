@@ -1,0 +1,904 @@
+/* Product Generator — two-step create flow */
+
+.product-generator {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-background-muted);
+  font-family: var(--font-body);
+}
+
+.product-generator__body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.product-generator__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Page header — full width like footer (breadcrumb, progress, step title, description) */
+.product-generator__header {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 24px 0 0 0;
+  box-sizing: border-box;
+}
+
+.product-generator__main-row {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.product-generator__scroll {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.product-generator__scroll-content {
+  flex: 1;
+  min-width: 0;
+  align-self: flex-start;
+}
+
+.product-generator__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 24px 16px 24px;
+  font-size: 14px;
+  color: var(--color-foreground-secondary);
+}
+
+.product-generator__breadcrumb-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--color-primary-500);
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0;
+  font: inherit;
+}
+
+.product-generator__breadcrumb-back:hover {
+  color: var(--color-primary-500);
+  text-decoration: none;
+}
+
+.product-generator__breadcrumb-sep {
+  color: var(--color-foreground-disabled);
+}
+
+.product-generator__breadcrumb-title {
+  font-weight: 700;
+  color: var(--color-foreground);
+}
+
+/* Progress bar — full width, half full on step 1, full on step 2 */
+.product-generator__progress-wrap {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Full-width grey track (remaining progress); fill shows completed portion on top */
+.product-generator__progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--color-foreground-disabled);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.product-generator__progress-fill {
+  height: 100%;
+  background: var(--color-primary-500);
+  border-radius: 0;
+  transition: width 0.2s ease;
+}
+
+/* Step header: title + chip badge */
+.product-generator__step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.product-generator__step-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-foreground);
+}
+
+/* Step badge — chip design (light blue bg, dark blue text, pill shape) */
+.product-generator__step-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary-500);
+  background: var(--color-primary-200);
+  border-radius: 999px;
+}
+
+.product-generator__step-description {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-foreground-secondary);
+}
+
+.product-generator__tab {
+  display: inline-block;
+  padding: 8px 16px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary-500);
+  background: var(--color-primary-200);
+  border-radius: 8px;
+}
+
+.product-generator__section {
+  width: 100%;
+}
+
+/* Section header — houses section name (e.g. General properties) per Figma */
+.product-generator__section-header {
+  margin-bottom: 16px;
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid #f5f5f5;
+  border-radius: 16px;
+}
+
+.product-generator__section-header .product-generator__section-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Subsection for section contents (cards, inputs, etc.) */
+.product-generator__section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.product-generator__card {
+  background: var(--color-surface);
+  border: 1px solid #f5f5f5;
+  border-radius: 16px;
+  height: fit-content;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.product-generator__card-header {
+  margin-bottom: 16px;
+}
+
+.product-generator__card-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-foreground);
+  line-height: 1.3;
+}
+
+.product-generator__section-title {
+  margin: 0 0 16px;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-foreground);
+}
+
+.product-generator__step-tag {
+  font-weight: 500;
+  color: var(--color-foreground-secondary);
+  font-size: 14px;
+}
+
+.product-generator__subsection {
+  margin-bottom: 0;
+}
+
+.product-generator__subsection--inline {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* All general property selects in one wrapping grid: two per row, button always at bottom */
+.product-generator__general-fields {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px 24px;
+}
+
+/* Each field (label + control) wraps as units — two per row when space allows */
+.product-generator__inline-field {
+  flex: 1 1 calc(50% - 12px);
+  min-width: 280px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.product-generator__inline-field .product-generator__label {
+  margin-bottom: 0;
+}
+
+/* Label above select/input — Montserrat 12px regular, title case (no forced uppercase) */
+.product-generator__label {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-foreground);
+}
+
+.product-generator__subsection--inline .product-generator__label {
+  margin-bottom: 0;
+}
+
+/* Select/input — standardized per Nest UI reference (label above, rounded box, focus state) */
+.product-generator__input,
+.product-generator__select {
+  width: 100%;
+  max-width: 100%;
+  min-height: 40px;
+  padding: 10px 16px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-foreground);
+  background: var(--color-surface);
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+}
+
+/* Phosphor CaretDown icon at far right — hide native dropdown arrow everywhere */
+.product-generator__select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  padding-right: 40px;
+  background-color: var(--color-surface);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 256 256' fill='%231a1a1a'%3E%3Cpath d='M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+}
+
+.product-generator__input:focus,
+.product-generator__select:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 1px var(--color-primary-500);
+}
+
+.product-generator__input:focus-visible,
+.product-generator__select:focus-visible {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 1px var(--color-primary-500);
+}
+
+.product-generator__input::placeholder {
+  color: var(--color-foreground-secondary);
+}
+
+.product-generator__select:disabled,
+.product-generator__input:disabled {
+  background: var(--color-background-muted);
+  border-color: var(--color-foreground-disabled);
+  color: var(--color-foreground-secondary);
+  cursor: not-allowed;
+}
+
+.product-generator__select:disabled {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 256 256' fill='%239ca3af'%3E%3Cpath d='M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z'/%3E%3C/svg%3E");
+}
+
+.product-generator__subsection--inline .product-generator__select {
+  max-width: 100%;
+}
+
+.product-generator__inline-field .product-generator__select {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Template chips — default (inactive) and active per Figma */
+.product-generator__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+/* Chip button base: flex for icon + label alignment */
+button.product-generator__chip {
+  display: flex;
+}
+
+/* Default chip: white bg, grey border, plus + label, pill shape */
+.product-generator__chip--inactive {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  min-height: 36px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-foreground-secondary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-brand-secondary-muted);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.product-generator__chip--inactive:hover {
+  color: var(--color-foreground);
+  border-color: var(--color-foreground-secondary);
+}
+
+.product-generator__chip--inactive:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary-500);
+}
+
+/* Active chip: light blue bg, blue text, label + remove (×), pill shape */
+.product-generator__chip--active {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 14px;
+  min-height: 36px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-primary-500);
+  background: var(--color-primary-200);
+  border: none;
+  border-radius: 9999px;
+  box-shadow: none;
+}
+
+.product-generator__chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--color-primary-500);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.product-generator__chip-remove:hover {
+  background: rgba(61, 102, 176, 0.15);
+  color: var(--color-primary-500);
+}
+
+.product-generator__chip-remove:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary-500);
+}
+
+/* Optional field row: label above select, remove button to the right */
+.product-generator__optional-field-row {
+  flex: 1 1 calc(50% - 12px);
+  min-width: 280px;
+  max-width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.product-generator__optional-field-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.product-generator__optional-field-control .product-generator__label {
+  margin-bottom: 0;
+}
+
+.product-generator__optional-field-control .product-generator__select,
+.product-generator__optional-field-control .product-generator__input {
+  width: 100%;
+  max-width: 100%;
+}
+
+.product-generator__optional-field-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin-bottom: 4px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--color-foreground-secondary);
+  cursor: pointer;
+}
+
+.product-generator__optional-field-remove:hover {
+  color: var(--color-foreground);
+  background: var(--color-background-muted);
+}
+
+/* Add optional field — trigger + dropdown */
+/* "+ Add optional field" always at bottom in its own block */
+.product-generator__add-optional-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.product-generator__add-optional-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+}
+
+.product-generator__add-optional-dropdown {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 4px);
+  z-index: 11;
+  min-width: 220px;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-foreground-disabled);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-generator__add-optional-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--color-foreground);
+  cursor: pointer;
+}
+
+.product-generator__add-optional-option:hover {
+  background: var(--color-background-muted);
+}
+
+.product-generator__add-optional-option--added {
+  background: var(--color-primary-200);
+  color: var(--color-foreground);
+  cursor: default;
+}
+
+.product-generator__add-optional-option--added:hover {
+  background: var(--color-primary-200);
+}
+
+.product-generator__add-optional-check {
+  display: inline-flex;
+  color: var(--color-primary-500);
+}
+
+.product-generator__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.product-generator__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: var(--color-primary-500);
+  background: var(--color-primary-200);
+  border-radius: 20px;
+}
+
+.product-generator__tag button {
+  margin-left: 2px;
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  border-radius: 50%;
+}
+
+.product-generator__tag button:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.product-generator__sample {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--color-foreground-secondary);
+}
+
+.product-generator__sample-preview {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
+
+.product-generator__hint {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--color-foreground-secondary);
+  line-height: 1.4;
+}
+
+.product-generator__link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  color: var(--color-primary-500);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.product-generator__link:hover {
+  text-decoration: none;
+}
+
+.product-generator__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.product-generator__field {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product-generator__field-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.product-generator__field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+/* Checkbox — standardized per Nest UI reference */
+.product-generator__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-foreground);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.product-generator__checkbox input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  background: var(--color-surface);
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.product-generator__checkbox input[type="checkbox"]:checked {
+  background: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 6l3 3 5-6' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.product-generator__checkbox input[type="checkbox"]:focus {
+  outline: none;
+}
+
+.product-generator__checkbox input[type="checkbox"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary-500);
+}
+
+.product-generator__checkbox input[type="checkbox"]:disabled {
+  background: var(--color-background-muted);
+  border-color: var(--color-foreground-disabled);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.product-generator__checkbox input[type="checkbox"]:disabled:checked {
+  background-color: var(--color-foreground-disabled);
+  border-color: var(--color-foreground-disabled);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 6l3 3 5-6' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.product-generator__checkbox--inline {
+  display: inline-flex;
+  margin-right: 16px;
+}
+
+.product-generator__common-details {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--color-foreground-secondary);
+}
+
+.product-generator__table-caption {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-foreground-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.product-generator__toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.product-generator__filters-btn {
+  margin-left: auto;
+}
+
+.product-generator__table-select-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  cursor: pointer;
+}
+
+.product-generator__table-select-all input {
+  cursor: pointer;
+}
+
+.product-generator__table-wrapper {
+  overflow: auto;
+  max-height: 360px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-foreground-disabled);
+  border-radius: 8px;
+}
+
+.product-generator__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.product-generator__table th,
+.product-generator__table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-foreground-disabled);
+  white-space: nowrap;
+}
+
+.product-generator__table th {
+  font-weight: 600;
+  color: var(--color-foreground-secondary);
+  background: var(--color-background-muted);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.product-generator__table td {
+  color: var(--color-foreground);
+}
+
+.product-generator__table tbody tr:hover {
+  background: var(--color-primary-200);
+}
+
+/* Table checkboxes — same standardized look as field checkboxes */
+.product-generator__table input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.product-generator__table input[type="checkbox"]:checked {
+  background: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 6l3 3 5-6' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.product-generator__table input[type="checkbox"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary-500);
+}
+
+/* Right panel — aligned with scroll content at top */
+.product-generator__panel {
+  flex-shrink: 0;
+  align-self: flex-start;
+  position: sticky;
+  top: 24px;
+  width: 320px;
+  margin: 0;
+  padding: 24px;
+  background: #3D66B0;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 16px;
+}
+
+.product-generator__panel-title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.product-generator__panel-count {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.product-generator__panel-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.product-generator__breakdown {
+  margin: 8px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.product-generator__breakdown h4 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.product-generator__breakdown p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.product-generator__panel-sample {
+  margin: 4px 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.3;
+}
+
+/* Footer — from sidenav to right edge, both steps */
+.product-generator__footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  background-color: var(--color-background-muted);
+  border-top: 1px solid var(--color-foreground-disabled);
+}
+
+.product-generator__footer-btn {
+  flex-shrink: 0;
+}

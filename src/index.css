@@ -1,0 +1,29 @@
+/* PIM Design System — tokens and buttons (Nest UI Kit) */
+@import "./styles/design-tokens.css";
+@import "./styles/buttons.css";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: var(--body-medium-size);
+  font-weight: var(--body-medium-weight);
+  line-height: var(--body-medium-line-height);
+  color: var(--color-foreground);
+  background-color: var(--color-background-muted);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}

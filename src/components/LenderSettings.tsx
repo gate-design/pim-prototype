@@ -6,11 +6,15 @@ import "./LenderSettings.css";
 export function LenderSettings({
   workspace,
   lenderName = "TD residential",
+  shelfCount = 0,
+  familiesCount = 0,
   onBack,
   onSignOut,
 }: {
   workspace: Workspace;
   lenderName?: string;
+  shelfCount?: number;
+  familiesCount?: number;
   onBack: () => void;
   onSignOut: () => void;
 }) {
@@ -24,8 +28,8 @@ export function LenderSettings({
           userEmail="josee.racicot@nesto.ca"
           userInitial="JR"
           currentSection="shelf"
-          shelfCount={0}
-          familiesCount={0}
+          shelfCount={shelfCount}
+          familiesCount={familiesCount}
           onNavigate={(section) => {
             if (section === "shelf") onBack();
             if (section === "product-families") onBack();

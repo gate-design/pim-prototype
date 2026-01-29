@@ -98,8 +98,11 @@ const SAMPLE_FAMILIES = [
   },
 ];
 
+export const FAMILIES_COUNT = SAMPLE_FAMILIES.length;
+
 export function ProductFamilies({
   workspace,
+  shelfCount = 0,
   onBackToShelf,
   onLogout,
   onTenantSettings,
@@ -107,6 +110,7 @@ export function ProductFamilies({
   onFamilyClick,
 }: {
   workspace: Workspace;
+  shelfCount?: number;
   onBackToShelf: () => void;
   onLogout?: () => void;
   onTenantSettings?: () => void;
@@ -125,7 +129,7 @@ export function ProductFamilies({
           userEmail="josee.racicot@nesto.ca"
           userInitial="JR"
           currentSection="product-families"
-          shelfCount={0}
+          shelfCount={shelfCount}
           familiesCount={count}
           onNavigate={(section) => {
             if (section === "shelf") onBackToShelf();

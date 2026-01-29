@@ -42,7 +42,7 @@ export function SideNav({
   userEmail = "josee.racicot@nesto.ca",
   userInitial = "JR",
   currentSection,
-  shelfCount = 60,
+  shelfCount = 0,
   familiesCount = 0,
   onNavigate,
   onSignOut,
@@ -303,7 +303,7 @@ export function SideNav({
               onClick={() => onNavigate("shelf")}
             >
               Main shelf
-              <span className="side-nav__badge">{shelfCount}</span>
+              {shelfCount > 0 && <span className="side-nav__badge">{shelfCount}</span>}
             </button>
           </div>
 
@@ -314,7 +314,7 @@ export function SideNav({
           >
             <TagSimple {...icon24} />
             <span>Product families</span>
-            <span className="side-nav__badge">{familiesCount}</span>
+            {familiesCount > 0 && <span className="side-nav__badge">{familiesCount}</span>}
           </button>
 
         </nav>

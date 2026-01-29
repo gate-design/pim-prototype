@@ -3,7 +3,7 @@ import { SelectWorkspace } from "./components/SelectWorkspace";
 import { MainShelf } from "./components/MainShelf";
 import { ProductGenerator } from "./components/ProductGenerator";
 import { ManageRates } from "./components/ManageRates";
-import { ProductFamilies } from "./components/ProductFamilies";
+import { ProductFamilies, FAMILIES_COUNT } from "./components/ProductFamilies";
 import { TenantSettings } from "./components/TenantSettings";
 import { LenderSettings } from "./components/LenderSettings";
 import { ProductFamilyDetail } from "./components/ProductFamilyDetail";
@@ -39,6 +39,8 @@ function App() {
     return (
       <ProductGenerator
         workspace={activeWorkspace}
+        shelfCount={products.length}
+        familiesCount={FAMILIES_COUNT}
         onBackToShelf={() => setView("shelf")}
         onGenerated={(newProducts) => {
           setProducts((prev) => [...prev, ...newProducts]);
@@ -56,6 +58,8 @@ function App() {
       <ManageRates
         workspace={activeWorkspace}
         product={manageRatesProduct}
+        shelfCount={products.length}
+        familiesCount={FAMILIES_COUNT}
         onBack={() => {
           setManageRatesProduct(null);
           setView("shelf");
@@ -76,6 +80,8 @@ function App() {
     return (
       <TenantSettings
         workspace={activeWorkspace}
+        shelfCount={products.length}
+        familiesCount={FAMILIES_COUNT}
         onBack={() => setView("shelf")}
         onSignOut={() => setActiveWorkspace(null)}
         onLenderSettings={() => setView("lender-settings")}
@@ -87,6 +93,8 @@ function App() {
     return (
       <LenderSettings
         workspace={activeWorkspace}
+        shelfCount={products.length}
+        familiesCount={FAMILIES_COUNT}
         onBack={() => setView("shelf")}
         onSignOut={() => setActiveWorkspace(null)}
       />
@@ -98,12 +106,13 @@ function App() {
       <ProductFamilyDetail
         workspace={activeWorkspace}
         family={selectedFamily}
+        shelfCount={products.length}
+        familiesCount={FAMILIES_COUNT}
         onBack={() => {
           setSelectedFamily(null);
           setView("product-families");
         }}
         onSignOut={() => setActiveWorkspace(null)}
-        familiesCount={7}
       />
     );
   }
@@ -114,6 +123,7 @@ function App() {
         workspace={activeWorkspace}
         product={selectedProduct}
         productsCount={products.length}
+        familiesCount={FAMILIES_COUNT}
         onBack={() => {
           setSelectedProduct(null);
           setView("shelf");
@@ -132,6 +142,7 @@ function App() {
     return (
       <ProductFamilies
         workspace={activeWorkspace}
+        shelfCount={products.length}
         onBackToShelf={() => setView("shelf")}
         onLogout={() => setActiveWorkspace(null)}
         onTenantSettings={() => setView("tenant-settings")}
@@ -148,6 +159,7 @@ function App() {
     <MainShelf
       workspace={activeWorkspace}
       products={products}
+      familiesCount={FAMILIES_COUNT}
       onLogout={() => setActiveWorkspace(null)}
       onCreateProduct={() => setView("create-product")}
       onManageRates={(product) => {

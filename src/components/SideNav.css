@@ -167,12 +167,15 @@
 
 .side-nav__badge {
   flex-shrink: 0;
-  padding: 2px 8px;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--color-foreground-secondary);
-  background: var(--color-foreground-disabled);
-  border-radius: 10px;
+  color: var(--color-background-default);
+  background-color: var(--color-background-neutral);
+  border-radius: 9999px;
 }
 
 .side-nav__section {

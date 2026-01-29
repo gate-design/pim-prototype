@@ -6,6 +6,7 @@ export function ProductDetail({
   workspace,
   product,
   productsCount,
+  familiesCount = 0,
   onBack,
   onSignOut,
   onSaveChanges,
@@ -13,6 +14,7 @@ export function ProductDetail({
   workspace: Workspace;
   product: ShelfProduct;
   productsCount: number;
+  familiesCount?: number;
   onBack: () => void;
   onSignOut: () => void;
   onSaveChanges?: (product: ShelfProduct) => void;
@@ -22,6 +24,7 @@ export function ProductDetail({
       workspace={workspace}
       initialProduct={product}
       shelfCount={productsCount}
+      familiesCount={familiesCount}
       onBackToShelf={onBack}
       onSaveChanges={onSaveChanges}
       onGenerated={() => {}}

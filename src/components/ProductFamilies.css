@@ -138,6 +138,10 @@
 }
 
 .product-families__content-title {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
   margin: 0;
   font-family: var(--font-heading);
   font-size: 24px;
@@ -156,7 +160,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 10px;
+  height: fit-content;
+  width: fit-content;
+  padding: 4px 10px;
   font-size: 14px;
   font-weight: 600;
   color: var(--color-background-default);

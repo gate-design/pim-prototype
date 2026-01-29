@@ -5,11 +5,15 @@ import "./TenantSettings.css";
 
 export function TenantSettings({
   workspace,
+  shelfCount = 0,
+  familiesCount = 0,
   onBack,
   onSignOut,
   onLenderSettings,
 }: {
   workspace: Workspace;
+  shelfCount?: number;
+  familiesCount?: number;
   onBack: () => void;
   onSignOut: () => void;
   onLenderSettings?: () => void;
@@ -24,8 +28,8 @@ export function TenantSettings({
           userEmail="josee.racicot@nesto.ca"
           userInitial="JR"
           currentSection="shelf"
-          shelfCount={0}
-          familiesCount={0}
+          shelfCount={shelfCount}
+          familiesCount={familiesCount}
           onNavigate={(section) => {
             if (section === "shelf") onBack();
             if (section === "product-families") onBack();

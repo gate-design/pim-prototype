@@ -188,6 +188,7 @@ export function ProductGenerator({
   onTenantSettings,
   onLenderSettings,
   onLogout,
+  familiesCount,
 }: {
   workspace: Workspace;
   onBackToShelf: () => void;
@@ -196,6 +197,7 @@ export function ProductGenerator({
   onSaveChanges?: (product: ShelfProduct) => void;
   initialProduct?: ShelfProduct | null;
   shelfCount?: number;
+  familiesCount?: number;
   onProductFamilies?: () => void;
   onTenantSettings?: () => void;
   onLenderSettings?: () => void;
@@ -462,7 +464,7 @@ export function ProductGenerator({
           userInitial="JR"
           currentSection="shelf"
           shelfCount={shelfCount ?? 0}
-          familiesCount={0}
+          familiesCount={familiesCount ?? 0}
           onNavigate={(section) => {
             if (section === "shelf") onBackToShelf();
             if (section === "product-families") onProductFamilies?.();

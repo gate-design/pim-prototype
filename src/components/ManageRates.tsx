@@ -48,12 +48,16 @@ function nextSubrateId() {
 export function ManageRates({
   workspace,
   product,
+  shelfCount = 0,
+  familiesCount = 0,
   onBack,
   onSave,
   onLogout,
 }: {
   workspace: Workspace;
   product: ShelfProduct;
+  shelfCount?: number;
+  familiesCount?: number;
   onBack: () => void;
   onSave?: (productId: string, rate: ProductRate) => void;
   onLogout?: () => void;
@@ -125,8 +129,8 @@ export function ManageRates({
           userEmail="josee.racicot@nesto.ca"
           userInitial="JR"
           currentSection="shelf"
-          shelfCount={60}
-          familiesCount={0}
+          shelfCount={shelfCount}
+          familiesCount={familiesCount}
           onNavigate={(section) => {
             if (section === "shelf") onBack();
           }}

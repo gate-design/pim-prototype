@@ -50,6 +50,7 @@ function formatRate(value: number | undefined): string {
 export function MainShelf({
   workspace,
   products,
+  familiesCount = 0,
   onLogout,
   onCreateProduct,
   onManageRates,
@@ -60,6 +61,7 @@ export function MainShelf({
 }: {
   workspace: Workspace;
   products: ShelfProduct[];
+  familiesCount?: number;
   onLogout: () => void;
   onCreateProduct: () => void;
   onManageRates?: (product: ShelfProduct) => void;
@@ -102,7 +104,7 @@ export function MainShelf({
           userInitial="JR"
           currentSection="shelf"
           shelfCount={products.length}
-          familiesCount={0}
+          familiesCount={familiesCount}
           onNavigate={(section) => {
             if (section === "product-families") onProductFamilies?.();
           }}

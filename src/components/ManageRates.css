@@ -225,12 +225,6 @@
 }
 
 /* Net rate field — label above value, left aligned (same as subrate row) */
-.manage-rates__field-row.manage-rates__net-rate-field {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
 .manage-rates__field-row.manage-rates__rate-type-row {
   margin-bottom: 16px;
 }

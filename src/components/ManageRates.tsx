@@ -70,6 +70,7 @@ export function ManageRates({
   const [investorSpread, setInvestorSpread] = useState(0);
   const [baseAnchorId, setBaseAnchorId] = useState(ANCHOR_RATES[0].id);
   const [baseAdjustment, setBaseAdjustment] = useState(1);
+  const [netRateOverride, setNetRateOverride] = useState<number | null>(null);
 
   const [subrates, setSubrates] = useState<SubrateRow[]>([
     { id: nextSubrateId(), subrateType: "Floor rate", valueType: "Static", staticRate: 4.45, adjustment: 0 },
@@ -85,6 +86,7 @@ export function ManageRates({
   const baseCalculated =
     baseType === "static" ? baseStaticRate : (ANCHOR_RATES.find((a) => a.id === baseAnchorId)?.value ?? 0) + baseAdjustment;
   const netRateCalculated = baseCalculated + lenderSpread + investorSpread;
+  const effectiveNetRate = netRateOverride ?? netRateCalculated;
 
   const updateSubrate = useCallback((id: string, updates: Partial<SubrateRow>) => {
     setSubrates((prev) => prev.map((r) => (r.id === id ? { ...r, ...updates } : r)));
@@ -111,7 +113,7 @@ export function ManageRates({
     row.valueType === "Static" ? row.staticRate : baseCalculated + row.adjustment;
 
   const handleSave = useCallback(() => {
-    const rate: ProductRate = { baseRatePercent: baseCalculated };
+    const rate: ProductRate = { baseRatePercent: effectiveNetRate };
     for (const row of subrates) {
       const value = subrateCalculated(row);
       if (row.subrateType === "Target rate") rate.targetRate = value;
@@ -119,7 +121,7 @@ export function ManageRates({
       else if (row.subrateType === "Floor rate") rate.floorRate = value;
     }
     onSave?.(product.id, rate);
-  }, [baseCalculated, subrates, product.id, onSave]);
+  }, [effectiveNetRate, subrates, product.id, onSave]);
 
   return (
     <div className="manage-rates">
@@ -247,9 +249,23 @@ export function ManageRates({
                           <span className="manage-rates__unit">%</span>
                         </div>
                       </div>
-                      <div className="manage-rates__field-row manage-rates__rate-field manage-rates__net-rate-field">
+                      <div className="manage-rates__field-row manage-rates__rate-field">
                         <label className="manage-rates__label">Net rate</label>
-                        <span className="manage-rates__calculated-value manage-rates__rate-badge">{netRateCalculated.toFixed(2)}%</span>
+                        <div className="manage-rates__input-wrap">
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="manage-rates__input"
+                            value={effectiveNetRate}
+                            onChange={(e) => {
+                              const v = e.target.value;
+                              const num = v === "" ? null : parseFloat(v);
+                              setNetRateOverride(num !== null && !Number.isNaN(num) ? num : null);
+                            }}
+                            aria-label="Net rate"
+                          />
+                          <span className="manage-rates__unit">%</span>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -328,9 +344,23 @@ export function ManageRates({
                           <span className="manage-rates__unit">%</span>
                         </div>
                       </div>
-                      <div className="manage-rates__field-row manage-rates__rate-field manage-rates__net-rate-field">
+                      <div className="manage-rates__field-row manage-rates__rate-field">
                         <label className="manage-rates__label">Net rate</label>
-                        <span className="manage-rates__calculated-value manage-rates__rate-badge">{netRateCalculated.toFixed(2)}%</span>
+                        <div className="manage-rates__input-wrap">
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="manage-rates__input"
+                            value={effectiveNetRate}
+                            onChange={(e) => {
+                              const v = e.target.value;
+                              const num = v === "" ? null : parseFloat(v);
+                              setNetRateOverride(num !== null && !Number.isNaN(num) ? num : null);
+                            }}
+                            aria-label="Net rate"
+                          />
+                          <span className="manage-rates__unit">%</span>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -582,7 +612,7 @@ export function ManageRates({
 
           <footer className="manage-rates__footer">
             <Button
-              intent="negative"
+              intent="brand"
               variant="primary"
               size="medium"
               leftIcon={<Check size={20} weight="bold" aria-hidden />}

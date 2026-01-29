@@ -25,22 +25,6 @@ function FilterIcon() {
   );
 }
 
-function HelpIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
-      <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="2" />
-      <path d="M10 7v2M10 11v3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M10 5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" fill="currentColor" />
-    </svg>
-  );
-}
-
-const PRODUCT_TYPE_TABS = [
-  { id: "mortgage", label: "Mortgage", active: true },
-  { id: "loc", label: "Line of credit", active: false },
-  { id: "loan", label: "Loan", active: false },
-];
-
 const SAMPLE_FAMILIES = [
   {
     id: "1",
@@ -153,23 +137,15 @@ export function ProductFamilies({
 
         <main className="product-families__content">
           <header className="product-families__content-header">
-            <h1 className="product-families__content-title">Product families</h1>
-            <button type="button" className="product-families__help" aria-label="Help">
-              <HelpIcon />
-            </button>
+            <div className="product-families__content-header-left">
+              <h1 className="product-families__content-title">
+                Product families
+                <span className="product-families__content-badge" aria-hidden>
+                  {count}
+                </span>
+              </h1>
+            </div>
           </header>
-
-          <div className="product-families__tabs">
-            {PRODUCT_TYPE_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                className={`product-families__tab ${tab.active ? "product-families__tab--active" : ""}`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
 
           <div className="product-families__toolbar">
             <div className="product-families__search">

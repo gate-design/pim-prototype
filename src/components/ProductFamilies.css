@@ -146,54 +146,22 @@
   color: var(--color-foreground);
 }
 
-.product-families__help {
+.product-families__content-header-left {
   display: flex;
   align-items: center;
+  gap: 10px;
+}
+
+.product-families__content-badge {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  color: var(--color-foreground-secondary);
-  cursor: pointer;
-}
-
-.product-families__help:hover {
-  background: var(--color-foreground-disabled);
-  color: var(--color-foreground);
-}
-
-.product-families__tabs {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--color-foreground-disabled);
-}
-
-.product-families__tab {
-  padding: 10px 16px;
-  font-family: var(--font-body);
+  padding: 2px 10px;
   font-size: 14px;
-  font-weight: 500;
-  color: var(--color-foreground-secondary);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  cursor: pointer;
-}
-
-.product-families__tab:hover {
-  color: var(--color-foreground);
-}
-
-.product-families__tab--active {
-  color: var(--color-primary-500);
-  border-bottom-color: var(--color-primary-500);
   font-weight: 600;
+  color: var(--color-background-default);
+  background-color: var(--color-background-neutral);
+  border-radius: 9999px;
 }
 
 .product-families__toolbar {

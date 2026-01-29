@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import {
   ArrowLeft,
   AnchorSimple,
+  CaretDown,
   Tilde,
   TrashSimple,
   CalendarBlank,
@@ -16,12 +17,19 @@ import { Button } from "./ui/Button";
 import { SideNav } from "./SideNav";
 import "./ManageRates.css";
 
+/** Optional timeline fields: Expiry date, Channel (Broker/Branch). */
+const TIMELINE_OPTIONAL_OPTIONS = [
+  { id: "expiryDate" as const, label: "Expiry date" },
+  { id: "channel" as const, label: "Channel" },
+] as const;
+const CHANNEL_OPTIONS = ["Broker", "Branch"] as const;
+
 const ANCHOR_RATES = [
   { id: "prime", label: "Prime rate (4.95%)", value: 4.95 },
   { id: "lender", label: "Lender base (4.20%)", value: 4.2 },
 ];
 
-const SUBRATE_TYPES = ["Target rate", "Ceiling rate", "Posted rate", "Floor rate"] as const;
+const SUBRATE_TYPES = ["Target rate", "Ceiling rate", "Floor rate"] as const;
 const SUBRATE_VALUE_TYPES = ["Static", "Relative to base"] as const;
 
 export interface SubrateRow {
@@ -52,14 +60,22 @@ export function ManageRates({
 }) {
   const [baseType, setBaseType] = useState<"static" | "relative">("static");
   const [baseStaticRate, setBaseStaticRate] = useState(4.4);
+  const [lenderSpread, setLenderSpread] = useState(0);
+  const [investorSpread, setInvestorSpread] = useState(0);
+  const [netRate, setNetRate] = useState(0);
   const [baseAnchorId, setBaseAnchorId] = useState(ANCHOR_RATES[0].id);
   const [baseAdjustment, setBaseAdjustment] = useState(1);
 
   const [subrates, setSubrates] = useState<SubrateRow[]>([
-    { id: nextSubrateId(), subrateType: "Target rate", valueType: "Static", staticRate: 4.45, adjustment: 0 },
+    { id: nextSubrateId(), subrateType: "Floor rate", valueType: "Static", staticRate: 4.45, adjustment: 0 },
     { id: nextSubrateId(), subrateType: "Ceiling rate", valueType: "Static", staticRate: 4.45, adjustment: 0 },
-    { id: nextSubrateId(), subrateType: "Posted rate", valueType: "Relative to base", staticRate: 0, adjustment: 1 },
+    { id: nextSubrateId(), subrateType: "Target rate", valueType: "Static", staticRate: 4.45, adjustment: 0 },
   ]);
+
+  const [showExpiryDate, setShowExpiryDate] = useState(false);
+  const [showChannel, setShowChannel] = useState(false);
+  const [channelValue, setChannelValue] = useState<typeof CHANNEL_OPTIONS[number] | "">("");
+  const [addOptionalDropdownOpen, setAddOptionalDropdownOpen] = useState(false);
 
   const baseCalculated =
     baseType === "static" ? baseStaticRate : (ANCHOR_RATES.find((a) => a.id === baseAnchorId)?.value ?? 0) + baseAdjustment;
@@ -94,7 +110,6 @@ export function ManageRates({
       const value = subrateCalculated(row);
       if (row.subrateType === "Target rate") rate.targetRate = value;
       else if (row.subrateType === "Ceiling rate") rate.ceilingRate = value;
-      else if (row.subrateType === "Posted rate") rate.postedRate = value;
       else if (row.subrateType === "Floor rate") rate.floorRate = value;
     }
     onSave?.(product.id, rate);
@@ -140,7 +155,7 @@ export function ManageRates({
             <div className="manage-rates__scroll-content">
               <section className="manage-rates__section">
                 <div className="manage-rates__card">
-                  <h2 className="manage-rates__card-title">Base rate</h2>
+                  <h2 className="manage-rates__card-title">Rate</h2>
                   <div className="manage-rates__base-type">
                     <label className={`manage-rates__type-option ${baseType === "static" ? "manage-rates__type-option--active" : ""}`}>
                       <input
@@ -173,29 +188,71 @@ export function ManageRates({
                   </div>
 
                   {baseType === "static" && (
-                    <div className="manage-rates__field-row">
-                      <label className="manage-rates__label">Rate</label>
-                      <div className="manage-rates__input-wrap">
-                        <input
-                          type="number"
-                          step="0.01"
-                          className="manage-rates__input"
-                          value={baseStaticRate}
-                          onChange={(e) => setBaseStaticRate(Number(e.target.value) || 0)}
-                        />
-                        <span className="manage-rates__unit">%</span>
+                    <div className="manage-rates__rate-fields-row">
+                      <div className="manage-rates__field-row manage-rates__rate-field">
+                        <label className="manage-rates__label">Base rate</label>
+                        <div className="manage-rates__input-wrap">
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="manage-rates__input"
+                            value={baseStaticRate}
+                            onChange={(e) => setBaseStaticRate(Number(e.target.value) || 0)}
+                          />
+                          <span className="manage-rates__unit">%</span>
+                        </div>
+                      </div>
+                      <div className="manage-rates__field-row manage-rates__rate-field">
+                        <label className="manage-rates__label">Lender spread</label>
+                        <div className="manage-rates__input-wrap">
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="manage-rates__input"
+                            value={lenderSpread}
+                            onChange={(e) => setLenderSpread(Number(e.target.value) || 0)}
+                          />
+                          <span className="manage-rates__unit">%</span>
+                        </div>
+                      </div>
+                      <div className="manage-rates__field-row manage-rates__rate-field">
+                        <label className="manage-rates__label">Investor spread</label>
+                        <div className="manage-rates__input-wrap">
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="manage-rates__input"
+                            value={investorSpread}
+                            onChange={(e) => setInvestorSpread(Number(e.target.value) || 0)}
+                          />
+                          <span className="manage-rates__unit">%</span>
+                        </div>
+                      </div>
+                      <div className="manage-rates__field-row manage-rates__rate-field">
+                        <label className="manage-rates__label">Net rate</label>
+                        <div className="manage-rates__input-wrap">
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="manage-rates__input"
+                            value={netRate}
+                            onChange={(e) => setNetRate(Number(e.target.value) || 0)}
+                          />
+                          <span className="manage-rates__unit">%</span>
+                        </div>
                       </div>
                     </div>
                   )}
 
                   {baseType === "relative" && (
-                    <div className="manage-rates__relative-block">
-                      <div className="manage-rates__field-row">
-                        <label className="manage-rates__label">Anchor</label>
+                    <div className="manage-rates__rate-fields-row">
+                      <div className="manage-rates__field-row manage-rates__rate-field">
+                        <label className="manage-rates__label">Base rate anchor</label>
                         <select
                           className="manage-rates__select"
                           value={baseAnchorId}
                           onChange={(e) => setBaseAnchorId(e.target.value)}
+                          aria-label="Base rate anchor"
                         >
                           {ANCHOR_RATES.map((a) => (
                             <option key={a.id} value={a.id}>
@@ -204,8 +261,8 @@ export function ManageRates({
                           ))}
                         </select>
                       </div>
-                      <div className="manage-rates__field-row manage-rates__field-row--label-above">
-                        <label className="manage-rates__label">Adjustment</label>
+                      <div className="manage-rates__field-row manage-rates__rate-field">
+                        <label className="manage-rates__label">Base rate adjustment</label>
                         <div className="manage-rates__input-inline">
                           <div className="manage-rates__stepper">
                             <button
@@ -235,11 +292,50 @@ export function ManageRates({
                           <span className="manage-rates__unit">%</span>
                         </div>
                       </div>
+                      <div className="manage-rates__field-row manage-rates__rate-field">
+                        <label className="manage-rates__label">Lender spread</label>
+                        <div className="manage-rates__input-wrap">
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="manage-rates__input"
+                            value={lenderSpread}
+                            onChange={(e) => setLenderSpread(Number(e.target.value) || 0)}
+                          />
+                          <span className="manage-rates__unit">%</span>
+                        </div>
+                      </div>
+                      <div className="manage-rates__field-row manage-rates__rate-field">
+                        <label className="manage-rates__label">Investor spread</label>
+                        <div className="manage-rates__input-wrap">
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="manage-rates__input"
+                            value={investorSpread}
+                            onChange={(e) => setInvestorSpread(Number(e.target.value) || 0)}
+                          />
+                          <span className="manage-rates__unit">%</span>
+                        </div>
+                      </div>
+                      <div className="manage-rates__field-row manage-rates__rate-field">
+                        <label className="manage-rates__label">Net rate</label>
+                        <div className="manage-rates__input-wrap">
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="manage-rates__input"
+                            value={netRate}
+                            onChange={(e) => setNetRate(Number(e.target.value) || 0)}
+                          />
+                          <span className="manage-rates__unit">%</span>
+                        </div>
+                      </div>
                     </div>
                   )}
 
                   <p className="manage-rates__calculated">
-                    Calculated rate: <span className="manage-rates__calculated-value manage-rates__rate-badge">{baseCalculated.toFixed(2)}%</span>
+                    Calculated base rate: <span className="manage-rates__calculated-value manage-rates__rate-badge">{baseCalculated.toFixed(2)}%</span>
                   </p>
                 </div>
               </section>
@@ -284,18 +380,14 @@ export function ManageRates({
                             ))}
                           </select>
                         </div>
-                        <Button
+                        <button
                           type="button"
-                          intent="negative"
-                          variant="ghost"
-                          size="xsmall"
-                          iconOnly
+                          className="manage-rates__delete-btn"
                           onClick={() => removeSubrate(row.id)}
                           aria-label="Remove subrate"
-                          className="manage-rates__delete-btn"
                         >
-                          <TrashSimple size={18} weight="regular" aria-hidden />
-                        </Button>
+                          <TrashSimple size={16} weight="regular" aria-hidden />
+                        </button>
                       </div>
                       <div className="manage-rates__subrate-row manage-rates__subrate-row--second">
                         <div className="manage-rates__subrate-field">
@@ -356,31 +448,132 @@ export function ManageRates({
 
               <section className="manage-rates__section">
                 <div className="manage-rates__card">
-                  <h2 className="manage-rates__card-title">Timeline</h2>
-                  <div className="manage-rates__date-row-pair">
-                    <div className="manage-rates__field-row manage-rates__field-row--label-above manage-rates__date-row">
-                      <label className="manage-rates__label">Effective date</label>
-                      <div className="manage-rates__input-with-icons">
-                        <CalendarBlank size={18} weight="regular" className="manage-rates__input-icon" aria-hidden />
-                        <input
-                          type="text"
-                          className="manage-rates__input manage-rates__input--date"
-                          placeholder="YYYY | MM | DD, 12:30:00 PM"
-                          readOnly
-                        />
+                  <h2 className="manage-rates__card-title">Misc</h2>
+                  <div className="manage-rates__misc-subsection">
+                    <div className="manage-rates__misc-fields-grid">
+                      <div className="manage-rates__field-row manage-rates__field-row--label-above manage-rates__date-row manage-rates__misc-field">
+                        <label className="manage-rates__label">Effective date</label>
+                        <div className="manage-rates__input-with-icons">
+                          <CalendarBlank size={18} weight="regular" className="manage-rates__input-icon" aria-hidden />
+                          <input
+                            type="text"
+                            className="manage-rates__input manage-rates__input--date"
+                            placeholder="YYYY | MM | DD, 12:30:00 PM"
+                            readOnly
+                          />
+                        </div>
                       </div>
+                      {showExpiryDate && (
+                        <div className="manage-rates__optional-date-row manage-rates__misc-field">
+                          <div className="manage-rates__field-row manage-rates__field-row--label-above manage-rates__date-row">
+                            <label className="manage-rates__label">Expiry date</label>
+                            <div className="manage-rates__input-with-icons">
+                              <CalendarBlank size={18} weight="regular" className="manage-rates__input-icon" aria-hidden />
+                              <input
+                                type="text"
+                                className="manage-rates__input manage-rates__input--date"
+                                placeholder="YYYY | MM | DD, 12:30:00 PM"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="manage-rates__optional-field-remove"
+                            onClick={() => setShowExpiryDate(false)}
+                            aria-label="Remove Expiry date"
+                          >
+                            <TrashSimple size={16} weight="regular" aria-hidden />
+                          </button>
+                        </div>
+                      )}
+                      {showChannel && (
+                        <div className="manage-rates__optional-date-row manage-rates__misc-field">
+                          <div className="manage-rates__field-row manage-rates__field-row--label-above manage-rates__date-row">
+                            <label className="manage-rates__label">Channel</label>
+                            <div className="manage-rates__input-wrap">
+                              <select
+                                className="manage-rates__select"
+                                value={channelValue}
+                                onChange={(e) => setChannelValue(e.target.value as typeof CHANNEL_OPTIONS[number] | "")}
+                                aria-label="Channel"
+                              >
+                                <option value="">Select…</option>
+                                {CHANNEL_OPTIONS.map((opt) => (
+                                  <option key={opt} value={opt}>{opt}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="manage-rates__optional-field-remove"
+                            onClick={() => {
+                              setShowChannel(false);
+                              setChannelValue("");
+                            }}
+                            aria-label="Remove Channel"
+                          >
+                            <TrashSimple size={16} weight="regular" aria-hidden />
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    <div className="manage-rates__field-row manage-rates__field-row--label-above manage-rates__date-row">
-                      <label className="manage-rates__label">Expiry date</label>
-                      <div className="manage-rates__input-with-icons">
-                        <CalendarBlank size={18} weight="regular" className="manage-rates__input-icon" aria-hidden />
-                        <input
-                          type="text"
-                          className="manage-rates__input manage-rates__input--date"
-                          placeholder="YYYY | MM | DD, 12:30:00 PM"
-                          readOnly
-                        />
-                      </div>
+                    <div className="manage-rates__add-optional-wrap">
+                      <Button
+                        type="button"
+                        variant="alt"
+                        size="small"
+                        className="manage-rates__add-optional-trigger"
+                        onClick={() => setAddOptionalDropdownOpen((o) => !o)}
+                        aria-expanded={addOptionalDropdownOpen}
+                        aria-haspopup="listbox"
+                        aria-label="Add optional field"
+                        leftIcon={<Plus size={16} weight="regular" aria-hidden />}
+                        rightIcon={<CaretDown size={16} weight="regular" aria-hidden />}
+                      >
+                        Add optional field
+                      </Button>
+                      {addOptionalDropdownOpen && (
+                        <>
+                          <div
+                            className="manage-rates__add-optional-backdrop"
+                            aria-hidden
+                            onClick={() => setAddOptionalDropdownOpen(false)}
+                          />
+                          <ul
+                            className="manage-rates__add-optional-dropdown"
+                            role="listbox"
+                            aria-label="Optional timeline fields"
+                          >
+                            {TIMELINE_OPTIONAL_OPTIONS.map((opt) => {
+                              const isAdded =
+                                (opt.id === "expiryDate" && showExpiryDate) || (opt.id === "channel" && showChannel);
+                              const handleSelect = () => {
+                                if (opt.id === "expiryDate" && !showExpiryDate) setShowExpiryDate(true);
+                                if (opt.id === "channel" && !showChannel) setShowChannel(true);
+                                setAddOptionalDropdownOpen(false);
+                              };
+                              return (
+                                <li
+                                  key={opt.id}
+                                  role="option"
+                                  aria-selected={isAdded}
+                                  className={`manage-rates__add-optional-option ${isAdded ? "manage-rates__add-optional-option--added" : ""}`}
+                                  onClick={() => !isAdded && handleSelect()}
+                                >
+                                  {opt.label}
+                                  {isAdded && (
+                                    <span className="manage-rates__add-optional-check" aria-hidden>
+                                      <Check size={16} weight="bold" />
+                                    </span>
+                                  )}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

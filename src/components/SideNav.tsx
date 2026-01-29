@@ -13,7 +13,7 @@ import {
   Plus,
 } from "@phosphor-icons/react";
 import { TdLogo } from "./icons/TdLogo";
-import { Nestologo } from "./icons/Nestologo";
+import { TDlogoWordmark } from "./icons/TDlogoWordmark";
 import "./SideNav.css";
 
 const SIDE_NAV_WIDTH = 280;
@@ -119,7 +119,7 @@ export function SideNav({
       <div className="side-nav__inner">
         <div className="side-nav__logo-row">
           <div className="side-nav__logo">
-            <Nestologo />
+            <TDlogoWordmark width={117} height={36} />
           </div>
           <button type="button" className="side-nav__expand" aria-label="Expand sidebar">
             <SidebarSimple {...icon20} />
@@ -137,7 +137,7 @@ export function SideNav({
               }}
             >
               <span className="side-nav__selector-icon">
-                <TdLogo size={24} />
+                <TdLogo size={32} />
               </span>
               <span className="side-nav__selector-text">
                 <span className="side-nav__selector-name">{tenantName}</span>
@@ -159,7 +159,7 @@ export function SideNav({
                   }}
                 >
                   <div className="side-nav__dropdown-item side-nav__dropdown-item--selected">
-                    <TdLogo size={24} />
+                    <TdLogo size={32} />
                     <span>{tenantName}</span>
                     <Check {...icon18} />
                   </div>
@@ -189,7 +189,7 @@ export function SideNav({
               }}
             >
               <span className="side-nav__selector-icon">
-                <TdLogo size={24} />
+                <TdLogo size={32} />
               </span>
               <span className="side-nav__selector-text">
                 <span className="side-nav__selector-name">{lenderName}</span>
@@ -211,7 +211,7 @@ export function SideNav({
                   }}
                 >
                   <div className="side-nav__dropdown-item side-nav__dropdown-item--selected">
-                    <TdLogo size={24} />
+                    <TdLogo size={32} />
                     <span>{lenderName}</span>
                     <Check {...icon18} />
                   </div>
@@ -259,7 +259,7 @@ export function SideNav({
                   className="side-nav__dropdown side-nav__dropdown--portaled side-nav__dropdown--nested"
                   style={{
                     position: "fixed",
-                    left: dropdownPosition.left + DROPDOWN_WIDTH + 8,
+                    left: dropdownPosition.left + DROPDOWN_WIDTH + DROPDOWN_OFFSET,
                     top: dropdownPosition.top,
                     zIndex: 1001,
                   }}
@@ -276,7 +276,7 @@ export function SideNav({
                       key={l.id}
                       className={`side-nav__dropdown-item ${lenderName === l.name ? "side-nav__dropdown-item--selected" : ""}`}
                     >
-                      <TdLogo size={24} />
+                      <TdLogo size={32} />
                       <span>{l.name}</span>
                       {lenderName === l.name && <Check {...icon18} />}
                     </div>

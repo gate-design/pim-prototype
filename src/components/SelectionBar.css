@@ -12,7 +12,7 @@
 }
 
 .selection-bar {
-  position: fixed;
+  position: absolute;
   left: 50%;
   bottom: 24px;
   transform: translateX(-50%);
@@ -39,6 +39,7 @@
   font-weight: 500;
   color: var(--color-foreground);
   margin-right: 4px;
+  white-space: nowrap;
 }
 
 /* Action buttons (Clear, Pin, Clone, Manage rate, Archive) — ghost buttons with custom padding */

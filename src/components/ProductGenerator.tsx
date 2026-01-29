@@ -356,11 +356,13 @@ export function ProductGenerator({
       termYears: p.termYears,
       rateType: p.rateType,
       ltvRange: p.ltvRange ?? "any",
+      ...(propertyValueMax !== "" && { propertyValueMax: propertyValueMax.trim() || undefined }),
+      ...(creditScoreMax !== "" && { creditScoreMax: creditScoreMax.trim() || undefined }),
       unpublished: true,
     };
     onGenerated([newProduct]);
     onBackToShelf();
-  }, [singleCombination, productCategory, productType, optionalFieldValues, onGenerated, onBackToShelf]);
+  }, [singleCombination, productCategory, productType, optionalFieldValues, propertyValueMax, creditScoreMax, onGenerated, onBackToShelf]);
 
   const sampleName = useMemo(() => {
     const values = getSampleTemplateValues();

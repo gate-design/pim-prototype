@@ -16,6 +16,20 @@ function KebabIcon() {
   );
 }
 
+function SearchIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
+      <path
+        d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function FilterIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
@@ -125,16 +139,23 @@ export function MainShelf({
           </header>
 
           <div className="main-shelf__toolbar">
+            <div className="main-shelf__search">
+              <SearchIcon />
+              <input
+                type="search"
+                placeholder="Search"
+                className="main-shelf__search-input"
+                aria-label="Search main shelf"
+              />
+            </div>
             <button type="button" className="main-shelf__filters-btn">
               <FilterIcon />
               Filters
             </button>
-            <button type="button" className="main-shelf__icon-btn" aria-label="More actions">
-              <KebabIcon />
-            </button>
           </div>
 
-          <div className="main-shelf__table-wrapper">
+          <div className="main-shelf__table-area">
+            <div className="main-shelf__table-wrapper">
             <table className="main-shelf__table">
               <thead>
                 <tr>
@@ -159,9 +180,10 @@ export function MainShelf({
                   <th>Base rate</th>
                   <th>Target rate</th>
                   <th>Ceiling rate</th>
-                  <th>Posted rate</th>
                   <th>Floor rate</th>
                   <th>Effective date</th>
+                  <th>Property value max</th>
+                  <th>Credit score max</th>
                   <th>Expiry date</th>
                   <th>Product category</th>
                   <th>Product type</th>
@@ -224,9 +246,10 @@ export function MainShelf({
                     </td>
                     <td>{formatRate(row.rate?.targetRate)}</td>
                     <td>{formatRate(row.rate?.ceilingRate)}</td>
-                    <td>{formatRate(row.rate?.postedRate)}</td>
                     <td>{formatRate(row.rate?.floorRate)}</td>
                     <td>{row.effectiveDate}</td>
+                    <td>{row.propertyValueMax != null && row.propertyValueMax !== "" ? String(row.propertyValueMax) : "—"}</td>
+                    <td>{row.creditScoreMax != null && row.creditScoreMax !== "" ? String(row.creditScoreMax) : "—"}</td>
                     <td>{row.expiryDate}</td>
                     <td>{row.productCategory}</td>
                     <td>{row.productType}</td>
@@ -245,6 +268,18 @@ export function MainShelf({
                 ))}
               </tbody>
             </table>
+            </div>
+            {showBar && (
+              <SelectionBar
+                count={selectedCount}
+                onClear={clearSelection}
+                onPin={() => {}}
+                onClone={() => {}}
+                onManageRate={handleManageRate}
+                onArchive={() => {}}
+                onPublish={() => {}}
+              />
+            )}
           </div>
 
           <footer className="main-shelf__pagination">
@@ -263,18 +298,6 @@ export function MainShelf({
           </footer>
         </main>
       </div>
-
-      {showBar && (
-        <SelectionBar
-          count={selectedCount}
-          onClear={clearSelection}
-          onPin={() => {}}
-          onClone={() => {}}
-          onManageRate={handleManageRate}
-          onArchive={() => {}}
-          onPublish={() => {}}
-        />
-      )}
     </div>
   );
 }

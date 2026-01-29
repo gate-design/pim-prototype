@@ -98,26 +98,26 @@
   outline-color: var(--color-focus-brand);
 }
 
-/* Secondary: #ECF0F7 bg, no outline; hover #3D66B0; pressed #385994 */
+/* Secondary: light tan bg, tan text; hover/active filled tan */
 .btn--brand.btn--secondary {
-  background: #ECF0F7;
-  color: #3D66B0;
+  background: var(--color-brand-secondary-muted);
+  color: var(--color-brand-secondary-foreground);
   border: none;
 }
 
 .btn--brand.btn--secondary:hover:not(:disabled) {
-  background: #3D66B0;
+  background: var(--color-brand-secondary);
   color: #ffffff;
 }
 
 .btn--brand.btn--secondary:active:not(:disabled) {
-  background: #385994;
+  background: var(--color-brand-secondary-active);
   color: #ffffff;
 }
 
 .btn--brand.btn--secondary:disabled {
-  background: #ECF0F7;
-  color: var(--color-brand-primary-foreground-disabled);
+  background: var(--color-brand-secondary-muted);
+  color: var(--color-brand-secondary-foreground-disabled);
 }
 
 .btn--brand.btn--secondary:focus-visible {

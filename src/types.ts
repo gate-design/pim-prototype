@@ -3,7 +3,6 @@ export type ShelfProductStatus = "DRAFT" | "ACTIVE" | "INACTIVE" | "EXPIRED" | "
 /** Rate data stored when a rate is added for a product (from Manage rates). */
 export interface ProductRate {
   baseRatePercent: number;
-  postedRate?: number;
   ceilingRate?: number;
   floorRate?: number;
   targetRate?: number;
@@ -31,6 +30,10 @@ export interface ShelfProduct {
   termYears: string;
   rateType: string;
   ltvRange: string;
+  /** From product attributes (ProductGenerator). Shown when defined. */
+  propertyValueMax?: string | number;
+  /** From product attributes (ProductGenerator). Shown when defined. */
+  creditScoreMax?: string | number;
   unpublished: boolean;
   /** Set when a rate has been added for this product (Manage rates). */
   rate?: ProductRate;
@@ -94,7 +97,6 @@ export const INITIAL_SHELF_PRODUCTS: ShelfProduct[] = [
       baseRatePercent: 4.4,
       targetRate: 4.45,
       ceilingRate: 4.45,
-      postedRate: 5.4,
     },
   },
   {

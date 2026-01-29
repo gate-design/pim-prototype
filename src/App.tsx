@@ -119,6 +119,11 @@ function App() {
           setView("shelf");
         }}
         onSignOut={() => setActiveWorkspace(null)}
+        onSaveChanges={(updated) => {
+          setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+          setSelectedProduct(null);
+          setView("shelf");
+        }}
       />
     );
   }

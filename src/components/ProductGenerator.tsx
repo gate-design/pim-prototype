@@ -135,10 +135,55 @@ function optionalFieldPlaceholderKey(fieldId: string): string {
   return fieldId.charAt(0).toUpperCase() + fieldId.slice(1);
 }
 
+function getInitialStateFromProduct(initialProduct: ShelfProduct | null | undefined) {
+  if (!initialProduct) return null;
+  const termYearsNum = Number(initialProduct.termYears);
+  const termMonths = Number.isNaN(termYearsNum) ? 60 : termYearsNum * 12;
+  const ltvMatch = initialProduct.ltvRange?.match(/(\d+)/);
+  const ltvMaxFromProduct = ltvMatch ? ltvMatch[1] : "95";
+  const addedOptional: string[] = [];
+  if (initialProduct.repaymentType) addedOptional.push("repaymentType");
+  if (initialProduct.transactionType) addedOptional.push("transactionType");
+  return {
+    productCategory: initialProduct.productCategory || "MORTGAGE",
+    productType: initialProduct.productType || "MORTGAGE",
+    nameTemplate: initialProduct.name,
+    descriptionTemplate: initialProduct.description,
+    family: initialProduct.productFamily || "Full Featured",
+    rateType: initialProduct.rateType || "Fixed",
+    region: "QC",
+    term: String(termMonths),
+    occupancy: "OWNER_OCCUPIED",
+    isRenewal: false,
+    mortgageType: "RESIDENTIAL",
+    insurability: "CONVENTIONAL_INSURABLE",
+    ltvMin: "0",
+    ltvMax: ltvMaxFromProduct,
+    tdsMax: "44",
+    gdsMax: "39",
+    amortizationMin: "5",
+    amortizationMax: "30",
+    propertyValueMax: initialProduct.propertyValueMax != null ? String(initialProduct.propertyValueMax) : "",
+    mortgageAmountMin: "",
+    mortgageAmountMax: "",
+    rateHold: "",
+    creditScoreMin: "",
+    creditScoreMax: initialProduct.creditScoreMax != null ? String(initialProduct.creditScoreMax) : "",
+    addedOptionalFields: addedOptional.length > 0 ? addedOptional : ["repaymentType", "transactionType"],
+    optionalFieldValues: {
+      repaymentType: initialProduct.repaymentType || "OPEN",
+      transactionType: initialProduct.transactionType || "NEW_PURCHASE",
+    },
+  };
+}
+
 export function ProductGenerator({
   workspace,
   onBackToShelf,
   onGenerated,
+  onSaveChanges,
+  initialProduct,
+  shelfCount,
   onProductFamilies,
   onTenantSettings,
   onLenderSettings,
@@ -147,15 +192,20 @@ export function ProductGenerator({
   workspace: Workspace;
   onBackToShelf: () => void;
   onGenerated: (products: ShelfProduct[]) => void;
+  /** When provided, form is in edit mode: state is initialized from this product and Save calls onSaveChanges(updated) instead of onGenerated. */
+  onSaveChanges?: (product: ShelfProduct) => void;
+  initialProduct?: ShelfProduct | null;
+  shelfCount?: number;
   onProductFamilies?: () => void;
   onTenantSettings?: () => void;
   onLenderSettings?: () => void;
   onLogout?: () => void;
 }) {
-  const [productCategory, setProductCategory] = useState("MORTGAGE");
+  const initial = getInitialStateFromProduct(initialProduct);
+  const [productCategory, setProductCategory] = useState(initial?.productCategory ?? "MORTGAGE");
   const productCategoryOptions = PRODUCT_CATEGORY_OPTIONS;
   const productTypeOptions = PRODUCT_TYPE_BY_CATEGORY[productCategory] ?? PRODUCT_TYPE_BY_CATEGORY.MORTGAGE;
-  const [productType, setProductType] = useState("MORTGAGE");
+  const [productType, setProductType] = useState(initial?.productType ?? "MORTGAGE");
 
   // When category changes, reset product type if it's not in the new category's options
   const setProductCategoryAndSyncType = useCallback((category: string) => {
@@ -163,31 +213,31 @@ export function ProductGenerator({
     const allowed = PRODUCT_TYPE_BY_CATEGORY[category] ?? PRODUCT_TYPE_BY_CATEGORY.MORTGAGE;
     setProductType((current) => (allowed.includes(current) ? current : allowed[0] ?? ""));
   }, []);
-  const [nameTemplate, setNameTemplate] = useState("Super - &ProductFamily - &Term - &Ratetype");
-  const [descriptionTemplate, setDescriptionTemplate] = useState("Super - &ProductFamily - &Term - &Ratetype");
+  const [nameTemplate, setNameTemplate] = useState(initial?.nameTemplate ?? "Super - &ProductFamily - &Term - &Ratetype");
+  const [descriptionTemplate, setDescriptionTemplate] = useState(initial?.descriptionTemplate ?? "Super - &ProductFamily - &Term - &Ratetype");
 
-  const [family, setFamily] = useState("Full Featured");
-  const [rateType, setRateType] = useState("Fixed");
-  const [region, setRegion] = useState("QC");
+  const [family, setFamily] = useState(initial?.family ?? "Full Featured");
+  const [rateType, setRateType] = useState(initial?.rateType ?? "Fixed");
+  const [region, setRegion] = useState(initial?.region ?? "QC");
 
   /** Product attributes (table-driven). Values are strings; num types use string for input. */
-  const [occupancy, setOccupancy] = useState("OWNER_OCCUPIED");
-  const [isRenewal, setIsRenewal] = useState(false);
-  const [mortgageType, setMortgageType] = useState("RESIDENTIAL");
-  const [term, setTerm] = useState("60");
-  const [insurability, setInsurability] = useState("CONVENTIONAL_INSURABLE");
-  const [ltvMin, setLtvMin] = useState("0");
-  const [ltvMax, setLtvMax] = useState("95");
-  const [tdsMax, setTdsMax] = useState("44");
-  const [gdsMax, setGdsMax] = useState("39");
-  const [amortizationMin, setAmortizationMin] = useState("5");
-  const [amortizationMax, setAmortizationMax] = useState("30");
-  const [propertyValueMax, setPropertyValueMax] = useState("");
-  const [mortgageAmountMin, setMortgageAmountMin] = useState("");
-  const [mortgageAmountMax, setMortgageAmountMax] = useState("");
-  const [rateHold, setRateHold] = useState("");
-  const [creditScoreMin, setCreditScoreMin] = useState("");
-  const [creditScoreMax, setCreditScoreMax] = useState("");
+  const [occupancy, setOccupancy] = useState(initial?.occupancy ?? "OWNER_OCCUPIED");
+  const [isRenewal, setIsRenewal] = useState(initial?.isRenewal ?? false);
+  const [mortgageType, setMortgageType] = useState(initial?.mortgageType ?? "RESIDENTIAL");
+  const [term, setTerm] = useState(initial?.term ?? "60");
+  const [insurability, setInsurability] = useState(initial?.insurability ?? "CONVENTIONAL_INSURABLE");
+  const [ltvMin, setLtvMin] = useState(initial?.ltvMin ?? "0");
+  const [ltvMax, setLtvMax] = useState(initial?.ltvMax ?? "95");
+  const [tdsMax, setTdsMax] = useState(initial?.tdsMax ?? "44");
+  const [gdsMax, setGdsMax] = useState(initial?.gdsMax ?? "39");
+  const [amortizationMin, setAmortizationMin] = useState(initial?.amortizationMin ?? "5");
+  const [amortizationMax, setAmortizationMax] = useState(initial?.amortizationMax ?? "30");
+  const [propertyValueMax, setPropertyValueMax] = useState(initial?.propertyValueMax ?? "");
+  const [mortgageAmountMin, setMortgageAmountMin] = useState(initial?.mortgageAmountMin ?? "");
+  const [mortgageAmountMax, setMortgageAmountMax] = useState(initial?.mortgageAmountMax ?? "");
+  const [rateHold, setRateHold] = useState(initial?.rateHold ?? "");
+  const [creditScoreMin, setCreditScoreMin] = useState(initial?.creditScoreMin ?? "");
+  const [creditScoreMax, setCreditScoreMax] = useState(initial?.creditScoreMax ?? "");
 
   /** Optional product attributes: user can add/remove these (rate hold, credit score min/max). */
   const [addedOptionalAttributes, setAddedOptionalAttributes] = useState<string[]>(["rateHold"]);
@@ -201,12 +251,11 @@ export function ProductGenerator({
   }, []);
 
   /** IDs of optional fields currently added in General Properties (e.g. repaymentType, transactionType). */
-  const [addedOptionalFields, setAddedOptionalFields] = useState<string[]>(["repaymentType", "transactionType"]);
+  const [addedOptionalFields, setAddedOptionalFields] = useState<string[]>(initial?.addedOptionalFields ?? ["repaymentType", "transactionType"]);
   /** Selected value per optional field. Keys are option ids; values will be replaced when you provide dropdown options. */
-  const [optionalFieldValues, setOptionalFieldValues] = useState<Record<string, string>>({
-    repaymentType: "OPEN",
-    transactionType: "NEW_PURCHASE",
-  });
+  const [optionalFieldValues, setOptionalFieldValues] = useState<Record<string, string>>(
+    initial?.optionalFieldValues ?? { repaymentType: "OPEN", transactionType: "NEW_PURCHASE" }
+  );
   const [optionalFieldDropdownOpen, setOptionalFieldDropdownOpen] = useState(false);
 
   const addOptionalField = useCallback((fieldId: string) => {
@@ -335,19 +384,11 @@ export function ProductGenerator({
 
   const handleSave = useCallback(() => {
     const p = singleCombination;
-    const newProduct: ShelfProduct = {
-      id: `shelf-${Date.now()}-0`,
+    const baseProduct: Omit<ShelfProduct, "id" | "descriptionId" | "productId" | "status" | "effectiveDate" | "expiryDate"> = {
       name: p.name,
       description: p.description,
-      descriptionId: "GEN001",
-      productId: "T2G01",
-      status: "DRAFT",
       visibility: "automatic",
       rateEmbodiment: "any",
-      effectiveDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, "/"),
-      expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
-        .toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" })
-        .replace(/\//g, "/"),
       productCategory,
       productType,
       repaymentType: optionalFieldValues.repaymentType ?? "",
@@ -360,9 +401,29 @@ export function ProductGenerator({
       ...(creditScoreMax !== "" && { creditScoreMax: creditScoreMax.trim() || undefined }),
       unpublished: true,
     };
-    onGenerated([newProduct]);
-    onBackToShelf();
-  }, [singleCombination, productCategory, productType, optionalFieldValues, propertyValueMax, creditScoreMax, onGenerated, onBackToShelf]);
+    if (initialProduct && onSaveChanges) {
+      const updated: ShelfProduct = {
+        ...initialProduct,
+        ...baseProduct,
+      };
+      onSaveChanges(updated);
+      onBackToShelf();
+    } else {
+      const newProduct: ShelfProduct = {
+        ...baseProduct,
+        id: `shelf-${Date.now()}-0`,
+        descriptionId: "GEN001",
+        productId: "T2G01",
+        status: "DRAFT",
+        effectiveDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, "/"),
+        expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+          .toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" })
+          .replace(/\//g, "/"),
+      };
+      onGenerated([newProduct]);
+      onBackToShelf();
+    }
+  }, [singleCombination, productCategory, productType, optionalFieldValues, propertyValueMax, creditScoreMax, initialProduct, onSaveChanges, onGenerated, onBackToShelf]);
 
   const sampleName = useMemo(() => {
     const values = getSampleTemplateValues();
@@ -400,7 +461,7 @@ export function ProductGenerator({
           userEmail="josee.racicot@nesto.ca"
           userInitial="JR"
           currentSection="shelf"
-          shelfCount={0}
+          shelfCount={shelfCount ?? 0}
           familiesCount={0}
           onNavigate={(section) => {
             if (section === "shelf") onBackToShelf();
@@ -419,7 +480,7 @@ export function ProductGenerator({
                 Back to Main shelf
               </button>
               <span className="product-generator__breadcrumb-sep">|</span>
-              <span className="product-generator__breadcrumb-title">Product creation</span>
+              <span className="product-generator__breadcrumb-title">{initialProduct ? initialProduct.name : "Product creation"}</span>
             </nav>
           </header>
 

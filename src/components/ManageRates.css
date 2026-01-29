@@ -112,7 +112,7 @@
   margin-bottom: 0;
 }
 
-/* Card title — same style as ProductDetail section head h2 (no uppercase) */
+/* Card title — same style as ProductGenerator card title (no uppercase) */
 .manage-rates__card-title {
   margin: 0 0 16px;
   font-family: var(--font-heading);

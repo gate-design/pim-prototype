@@ -29,6 +29,7 @@ const ANCHOR_RATES = [
   { id: "lender", label: "Lender base (4.20%)", value: 4.2 },
 ];
 
+const RATE_TYPES = ["Fixed", "Variable", "Adjustable"] as const;
 const SUBRATE_TYPES = ["Target rate", "Ceiling rate", "Floor rate"] as const;
 const SUBRATE_VALUE_TYPES = ["Static", "Relative to base"] as const;
 
@@ -62,11 +63,11 @@ export function ManageRates({
   onSave?: (productId: string, rate: ProductRate) => void;
   onLogout?: () => void;
 }) {
+  const [rateType, setRateType] = useState(product.rateType || "Fixed");
   const [baseType, setBaseType] = useState<"static" | "relative">("static");
   const [baseStaticRate, setBaseStaticRate] = useState(4.4);
   const [lenderSpread, setLenderSpread] = useState(0);
   const [investorSpread, setInvestorSpread] = useState(0);
-  const [netRate, setNetRate] = useState(0);
   const [baseAnchorId, setBaseAnchorId] = useState(ANCHOR_RATES[0].id);
   const [baseAdjustment, setBaseAdjustment] = useState(1);
 
@@ -83,6 +84,7 @@ export function ManageRates({
 
   const baseCalculated =
     baseType === "static" ? baseStaticRate : (ANCHOR_RATES.find((a) => a.id === baseAnchorId)?.value ?? 0) + baseAdjustment;
+  const netRateCalculated = baseCalculated + lenderSpread + investorSpread;
 
   const updateSubrate = useCallback((id: string, updates: Partial<SubrateRow>) => {
     setSubrates((prev) => prev.map((r) => (r.id === id ? { ...r, ...updates } : r)));
@@ -159,7 +161,20 @@ export function ManageRates({
             <div className="manage-rates__scroll-content">
               <section className="manage-rates__section">
                 <div className="manage-rates__card">
-                  <h2 className="manage-rates__card-title">Rate</h2>
+                  <h2 className="manage-rates__card-title">General</h2>
+                  <div className="manage-rates__field-row manage-rates__rate-field manage-rates__rate-type-row">
+                    <label className="manage-rates__label">Rate type</label>
+                    <select
+                      className="manage-rates__select"
+                      value={rateType}
+                      onChange={(e) => setRateType(e.target.value)}
+                      aria-label="Rate type"
+                    >
+                      {RATE_TYPES.map((r) => (
+                        <option key={r} value={r}>{r}</option>
+                      ))}
+                    </select>
+                  </div>
                   <div className="manage-rates__base-type">
                     <label className={`manage-rates__type-option ${baseType === "static" ? "manage-rates__type-option--active" : ""}`}>
                       <input
@@ -232,18 +247,9 @@ export function ManageRates({
                           <span className="manage-rates__unit">%</span>
                         </div>
                       </div>
-                      <div className="manage-rates__field-row manage-rates__rate-field">
+                      <div className="manage-rates__field-row manage-rates__rate-field manage-rates__net-rate-field">
                         <label className="manage-rates__label">Net rate</label>
-                        <div className="manage-rates__input-wrap">
-                          <input
-                            type="number"
-                            step="0.01"
-                            className="manage-rates__input"
-                            value={netRate}
-                            onChange={(e) => setNetRate(Number(e.target.value) || 0)}
-                          />
-                          <span className="manage-rates__unit">%</span>
-                        </div>
+                        <span className="manage-rates__calculated-value manage-rates__rate-badge">{netRateCalculated.toFixed(2)}%</span>
                       </div>
                     </div>
                   )}
@@ -322,135 +328,13 @@ export function ManageRates({
                           <span className="manage-rates__unit">%</span>
                         </div>
                       </div>
-                      <div className="manage-rates__field-row manage-rates__rate-field">
+                      <div className="manage-rates__field-row manage-rates__rate-field manage-rates__net-rate-field">
                         <label className="manage-rates__label">Net rate</label>
-                        <div className="manage-rates__input-wrap">
-                          <input
-                            type="number"
-                            step="0.01"
-                            className="manage-rates__input"
-                            value={netRate}
-                            onChange={(e) => setNetRate(Number(e.target.value) || 0)}
-                          />
-                          <span className="manage-rates__unit">%</span>
-                        </div>
+                        <span className="manage-rates__calculated-value manage-rates__rate-badge">{netRateCalculated.toFixed(2)}%</span>
                       </div>
                     </div>
                   )}
 
-                  <p className="manage-rates__calculated">
-                    Calculated base rate: <span className="manage-rates__calculated-value manage-rates__rate-badge">{baseCalculated.toFixed(2)}%</span>
-                  </p>
-                </div>
-              </section>
-
-              <section className="manage-rates__section">
-                <div className="manage-rates__card">
-                  <div className="manage-rates__card-head">
-                    <h2 className="manage-rates__card-title">Subrates</h2>
-                    <Button variant="alt" size="small" onClick={addSubrate} leftIcon={<Plus size={16} weight="bold" aria-hidden />}>
-                      Add
-                    </Button>
-                  </div>
-
-                  {subrates.map((row) => (
-                    <div key={row.id} className="manage-rates__subrate-card">
-                      <div className="manage-rates__subrate-row">
-                        <div className="manage-rates__subrate-field">
-                          <label className="manage-rates__label">Subrate</label>
-                          <select
-                            className="manage-rates__select manage-rates__select--sub"
-                            value={row.subrateType}
-                            onChange={(e) => updateSubrate(row.id, { subrateType: e.target.value as SubrateRow["subrateType"] })}
-                          >
-                            {SUBRATE_TYPES.map((t) => (
-                              <option key={t} value={t}>
-                                {t}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="manage-rates__subrate-field">
-                          <label className="manage-rates__label">Type</label>
-                          <select
-                            className="manage-rates__select manage-rates__select--sub"
-                            value={row.valueType}
-                            onChange={(e) => updateSubrate(row.id, { valueType: e.target.value as SubrateRow["valueType"] })}
-                          >
-                            {SUBRATE_VALUE_TYPES.map((t) => (
-                              <option key={t} value={t}>
-                                {t}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="manage-rates__subrate-field">
-                          {row.valueType === "Static" ? (
-                            <>
-                              <label className="manage-rates__label">Rate</label>
-                              <div className="manage-rates__input-inline">
-                                <input
-                                  type="number"
-                                  step="0.01"
-                                  className="manage-rates__input manage-rates__input--sm"
-                                  value={row.staticRate}
-                                  onChange={(e) => updateSubrate(row.id, { staticRate: Number(e.target.value) || 0 })}
-                                />
-                                <span className="manage-rates__unit">%</span>
-                              </div>
-                            </>
-                          ) : (
-                            <>
-                              <label className="manage-rates__label">Rate adjustment</label>
-                              <div className="manage-rates__input-inline">
-                                <div className="manage-rates__stepper manage-rates__stepper--sm">
-                                  <button
-                                    type="button"
-                                    className="manage-rates__stepper-btn"
-                                    onClick={() => updateSubrate(row.id, { adjustment: row.adjustment - 0.25 })}
-                                    aria-label="Decrease"
-                                  >
-                                    <Minus size={18} weight="bold" aria-hidden />
-                                  </button>
-                                  <input
-                                    type="number"
-                                    step="0.25"
-                                    className="manage-rates__stepper-input"
-                                    value={row.adjustment}
-                                    onChange={(e) => updateSubrate(row.id, { adjustment: Number(e.target.value) || 0 })}
-                                  />
-                                  <button
-                                    type="button"
-                                    className="manage-rates__stepper-btn"
-                                    onClick={() => updateSubrate(row.id, { adjustment: row.adjustment + 0.25 })}
-                                    aria-label="Increase"
-                                  >
-                                    <Plus size={18} weight="bold" aria-hidden />
-                                  </button>
-                                </div>
-                                <span className="manage-rates__unit">%</span>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                        <span className="manage-rates__subrate-calc">Calculated rate: <span className="manage-rates__rate-badge">{subrateCalculated(row).toFixed(2)}%</span></span>
-                        <button
-                          type="button"
-                          className="manage-rates__delete-btn"
-                          onClick={() => removeSubrate(row.id)}
-                          aria-label="Remove subrate"
-                        >
-                          <TrashSimple size={16} weight="regular" aria-hidden />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section className="manage-rates__section">
-                <div className="manage-rates__card">
-                  <h2 className="manage-rates__card-title">Misc</h2>
                   <div className="manage-rates__misc-subsection">
                     <div className="manage-rates__misc-fields-grid">
                       <div className="manage-rates__field-row manage-rates__field-row--label-above manage-rates__date-row manage-rates__misc-field">
@@ -578,6 +462,110 @@ export function ManageRates({
                       )}
                     </div>
                   </div>
+                </div>
+              </section>
+
+              <section className="manage-rates__section">
+                <div className="manage-rates__card">
+                  <div className="manage-rates__card-head">
+                    <h2 className="manage-rates__card-title">Subrates</h2>
+                    <Button variant="alt" size="small" onClick={addSubrate} leftIcon={<Plus size={16} weight="bold" aria-hidden />}>
+                      Add
+                    </Button>
+                  </div>
+
+                  {subrates.map((row) => (
+                    <div key={row.id} className="manage-rates__subrate-card">
+                      <div className="manage-rates__subrate-row">
+                        <div className="manage-rates__subrate-field">
+                          <label className="manage-rates__label">Subrate</label>
+                          <select
+                            className="manage-rates__select manage-rates__select--sub"
+                            value={row.subrateType}
+                            onChange={(e) => updateSubrate(row.id, { subrateType: e.target.value as SubrateRow["subrateType"] })}
+                          >
+                            {SUBRATE_TYPES.map((t) => (
+                              <option key={t} value={t}>
+                                {t}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="manage-rates__subrate-field">
+                          <label className="manage-rates__label">Type</label>
+                          <select
+                            className="manage-rates__select manage-rates__select--sub"
+                            value={row.valueType}
+                            onChange={(e) => updateSubrate(row.id, { valueType: e.target.value as SubrateRow["valueType"] })}
+                          >
+                            {SUBRATE_VALUE_TYPES.map((t) => (
+                              <option key={t} value={t}>
+                                {t}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="manage-rates__subrate-field">
+                          {row.valueType === "Static" ? (
+                            <>
+                              <label className="manage-rates__label">Rate</label>
+                              <div className="manage-rates__input-inline">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  className="manage-rates__input manage-rates__input--sm"
+                                  value={row.staticRate}
+                                  onChange={(e) => updateSubrate(row.id, { staticRate: Number(e.target.value) || 0 })}
+                                />
+                                <span className="manage-rates__unit">%</span>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <label className="manage-rates__label">Rate adjustment</label>
+                              <div className="manage-rates__input-inline">
+                                <div className="manage-rates__stepper manage-rates__stepper--sm">
+                                  <button
+                                    type="button"
+                                    className="manage-rates__stepper-btn"
+                                    onClick={() => updateSubrate(row.id, { adjustment: row.adjustment - 0.25 })}
+                                    aria-label="Decrease"
+                                  >
+                                    <Minus size={18} weight="bold" aria-hidden />
+                                  </button>
+                                  <input
+                                    type="number"
+                                    step="0.25"
+                                    className="manage-rates__stepper-input"
+                                    value={row.adjustment}
+                                    onChange={(e) => updateSubrate(row.id, { adjustment: Number(e.target.value) || 0 })}
+                                  />
+                                  <button
+                                    type="button"
+                                    className="manage-rates__stepper-btn"
+                                    onClick={() => updateSubrate(row.id, { adjustment: row.adjustment + 0.25 })}
+                                    aria-label="Increase"
+                                  >
+                                    <Plus size={18} weight="bold" aria-hidden />
+                                  </button>
+                                </div>
+                                <span className="manage-rates__unit">%</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                        <span className="manage-rates__subrate-calc">Net rate: <span className="manage-rates__rate-badge">{subrateCalculated(row).toFixed(2)}%</span></span>
+                        <button
+                          type="button"
+                          className="manage-rates__delete-btn"
+                          onClick={() => removeSubrate(row.id)}
+                          aria-label="Remove subrate"
+                        >
+                          <TrashSimple size={16} weight="regular" aria-hidden />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </section>
 

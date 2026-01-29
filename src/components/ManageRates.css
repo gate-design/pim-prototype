@@ -172,17 +172,22 @@
 }
 
 .manage-rates__type-option:hover .manage-rates__type-content {
-  border-color: var(--color-primary-200);
+  border-color: var(--color-brand-primary-200);
 }
 
 .manage-rates__type-option--active .manage-rates__type-content {
-  border-color: var(--color-primary-500);
-  background: var(--color-primary-200);
+  border-color: var(--color-brand-primary);
+  background: rgba(173, 218, 165, 0);
+  color: var(--color-foreground);
+}
+
+.manage-rates__type-option--active .manage-rates__type-icon {
+  color: var(--color-foreground-default);
 }
 
 .manage-rates__type-label {
   font-weight: 600;
-  color: var(--color-foreground);
+  color: var(--color-foreground-default);
 }
 
 .manage-rates__type-desc {
@@ -217,6 +222,17 @@
   min-width: 180px;
   width: auto;
   margin-bottom: 0;
+}
+
+/* Net rate field — label above value, left aligned (same as subrate row) */
+.manage-rates__field-row.manage-rates__net-rate-field {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.manage-rates__field-row.manage-rates__rate-type-row {
+  margin-bottom: 16px;
 }
 
 /* Label above control (e.g. Adjustment) */
@@ -317,15 +333,6 @@ input.manage-rates__input.manage-rates__input--date {
   color: var(--color-foreground-secondary);
 }
 
-.manage-rates__calculated {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin: 12px 0 0;
-  font-size: 14px;
-  color: var(--color-foreground-secondary);
-}
-
 .manage-rates__calculated-value {
   font-weight: 600;
   color: var(--color-foreground);
@@ -337,7 +344,8 @@ input.manage-rates__input.manage-rates__input--date {
   align-items: center;
   justify-content: center;
   min-width: 65px;
-  min-height: 26px;
+  height: 40px;
+  min-height: 40px;
   padding: 4px 10px;
   font-size: 14px;
   font-weight: 600;
@@ -349,7 +357,8 @@ input.manage-rates__input.manage-rates__input--date {
 }
 
 .manage-rates__calculated-value.manage-rates__rate-badge {
-  margin-left: 4px;
+  height: 40px;
+  margin-left: 0px;
 }
 
 /* Stepper (adjustment +/-) */
@@ -416,10 +425,11 @@ input.manage-rates__input.manage-rates__input--date {
 
 .manage-rates__subrate-row {
   display: flex;
-  align-items: flex-end;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
   gap: 12px;
   width: 100%;
-  flex-wrap: wrap;
 }
 
 .manage-rates__subrate-row .manage-rates__subrate-field {
@@ -459,9 +469,11 @@ input.manage-rates__input.manage-rates__input--date {
   font-size: 13px;
   color: var(--color-foreground-secondary);
   margin-left: auto;
-  margin-bottom: 8px;
-  display: inline-flex;
+  margin-bottom: 0px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
@@ -479,6 +491,7 @@ input.manage-rates__input.manage-rates__input--date {
   width: 32px;
   height: 32px;
   padding: 0;
+  margin-top: 28px;
   margin-bottom: 4px;
   flex-shrink: 0;
   background: none;

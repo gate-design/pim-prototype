@@ -367,10 +367,15 @@
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+.main-shelf__th-checkbox input[type="checkbox"]:hover:not(:disabled):not(:checked),
+.main-shelf__td-checkbox input[type="checkbox"]:hover:not(:disabled):not(:checked) {
+  border-color: var(--color-brand-primary);
+}
+
 .main-shelf__th-checkbox input[type="checkbox"]:checked,
 .main-shelf__td-checkbox input[type="checkbox"]:checked {
-  background: var(--color-primary-500);
-  border-color: var(--color-primary-500);
+  background: var(--color-brand-primary);
+  border-color: var(--color-brand-primary);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 6l3 3 5-6' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
@@ -384,7 +389,7 @@
 .main-shelf__th-checkbox input[type="checkbox"]:focus-visible,
 .main-shelf__td-checkbox input[type="checkbox"]:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary-500);
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand-primary);
 }
 
 .main-shelf__th-checkbox input[type="checkbox"]:disabled,
@@ -407,7 +412,7 @@
 }
 
 .main-shelf__table tbody tr.main-shelf__row--selected {
-  background: var(--color-primary-200);
+  background: var(--color-brand-primary-200);
 }
 
 .main-shelf__table th {
@@ -424,7 +429,7 @@
 }
 
 .main-shelf__table tbody tr:hover {
-  background: var(--color-primary-200);
+  background: color-mix(in srgb, var(--color-brand-primary-200) 50%, white);
 }
 
 .main-shelf__badge {

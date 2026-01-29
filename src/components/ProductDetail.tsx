@@ -205,7 +205,7 @@ export function ProductDetail({
                         aria-expanded={optionalFieldDropdownOpen}
                         aria-haspopup="listbox"
                         aria-label="Add optional field"
-                        leftIcon={<Plus size={16} weight="bold" aria-hidden />}
+                        leftIcon={<Plus size={16} weight="regular" aria-hidden />}
                         rightIcon={<CaretDown size={16} weight="regular" aria-hidden />}
                       >
                         Add optional field

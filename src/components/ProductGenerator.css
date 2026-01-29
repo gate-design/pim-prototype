@@ -248,13 +248,86 @@
   gap: 16px;
 }
 
-/* All general property selects in one wrapping grid: two per row, button always at bottom */
-.product-generator__general-fields {
+/* Field grid: 2–3 columns, each cell min 320px, fill and wrap */
+.product-generator__general-fields,
+.product-generator__grid {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 16px 24px;
+}
+
+.product-generator__field-cell {
+  min-width: 320px;
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 6px;
+  width: 100%;
+  height: fit-content;
+}
+
+.product-generator__field-cell .product-generator__label {
+  margin-bottom: 0;
+}
+
+.product-generator__field-cell .product-generator__input,
+.product-generator__field-cell .product-generator__select {
+  width: 100%;
+}
+
+/* Label left, control right (same 6px gap) */
+.product-generator__field-cell--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.product-generator__field-cell--inline .product-generator__label {
+  flex-shrink: 0;
+}
+
+.product-generator__field-cell--inline .product-generator__input,
+.product-generator__field-cell--inline .product-generator__select {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Inner wrapper (label + control) — column layout with gap, fill cell width */
+.product-generator__field-cell--inline > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: fit-content;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Toggle row: label above toggle, toggle height matches select (40px) */
+.product-generator__field-cell--toggle-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.product-generator__field-cell--toggle-row .product-generator__toggle {
+  height: 40px;
+  min-width: 44px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.product-generator__field-cell--toggle-row .product-generator__toggle .product-generator__toggle-slider {
+  position: relative;
+  inset: auto;
+  height: 24px;
+  width: 44px;
+  min-width: 44px;
+  overflow: hidden;
 }
 
 /* Each field (label + control) wraps as units — two per row when space allows */
@@ -442,9 +515,12 @@ button.product-generator__chip {
 
 /* Optional field row: label above select, remove button to the right */
 .product-generator__optional-field-row {
-  flex: 1 1 calc(50% - 12px);
-  min-width: 280px;
-  max-width: 100%;
+  min-width: 320px;
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
   display: flex;
   align-items: flex-end;
   gap: 12px;
@@ -453,9 +529,13 @@ button.product-generator__chip {
 .product-generator__optional-field-control {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 6px;
   flex: 1;
   min-width: 0;
+  width: 100%;
+  height: fit-content;
 }
 
 .product-generator__optional-field-control .product-generator__label {
@@ -465,7 +545,7 @@ button.product-generator__chip {
 .product-generator__optional-field-control .product-generator__select,
 .product-generator__optional-field-control .product-generator__input {
   width: 100%;
-  max-width: 100%;
+  min-width: 0;
 }
 
 .product-generator__optional-field-remove {
@@ -476,6 +556,7 @@ button.product-generator__chip {
   height: 32px;
   padding: 0;
   margin-bottom: 4px;
+  flex-shrink: 0;
   background: none;
   border: none;
   border-radius: 6px;
@@ -595,10 +676,46 @@ button.product-generator__chip {
 
 .product-generator__sample-preview {
   display: flex;
-  flex-flow: row;
-  justify-content: flex-start;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #dadce1;
+  border-radius: 8px;
+}
+
+.product-generator__sample-preview-icon {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #1a202c;
+  color: #ffffff;
+}
+
+.product-generator__sample-preview-text {
+  display: flex;
+  flex-direction: column;
   gap: 4px;
+  min-width: 0;
+}
+
+.product-generator__sample-preview-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a5568;
+  line-height: 1.3;
+}
+
+.product-generator__sample-preview-value {
+  font-size: 14px;
+  font-weight: 400;
+  color: #718096;
+  line-height: 1.4;
 }
 
 .product-generator__hint {
@@ -624,7 +741,7 @@ button.product-generator__chip {
 
 .product-generator__grid {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 32px;
   margin-top: 16px;
   margin-bottom: 16px;
@@ -709,6 +826,123 @@ button.product-generator__chip {
 .product-generator__checkbox--inline {
   display: inline-flex;
   margin-right: 16px;
+}
+
+/* Radio — same layout as checkbox, circular control */
+.product-generator__radio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-foreground);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.product-generator__radio input[type="radio"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #d1d1d1;
+  border-radius: 50%;
+  background: var(--color-surface);
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.product-generator__radio input[type="radio"]:checked {
+  border-color: var(--color-primary-500);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 6px var(--color-primary-500);
+}
+
+.product-generator__radio input[type="radio"]:focus {
+  outline: none;
+}
+
+.product-generator__radio input[type="radio"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary-500);
+}
+
+.product-generator__radio input[type="radio"]:checked:focus-visible {
+  box-shadow: inset 0 0 0 6px var(--color-primary-500), 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary-500);
+}
+
+.product-generator__radio input[type="radio"]:disabled {
+  background: var(--color-background-muted);
+  border-color: var(--color-foreground-disabled);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.product-generator__radio--inline {
+  display: inline-flex;
+  margin-right: 16px;
+}
+
+.product-generator__toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.product-generator__toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.product-generator__toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--color-foreground-disabled);
+  border-radius: 24px;
+  transition: background 0.2s;
+  overflow: hidden;
+}
+
+.product-generator__toggle-slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: var(--color-surface);
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.product-generator__toggle input:checked + .product-generator__toggle-slider {
+  background: var(--color-primary-500);
+}
+
+.product-generator__toggle input:checked + .product-generator__toggle-slider::before {
+  transform: translateX(20px);
+}
+
+.product-generator__toggle input:focus-visible + .product-generator__toggle-slider {
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary-500);
+}
+
+.product-generator__field-num {
+  width: 100%;
+}
+
+.product-generator__field-custom-input {
+  width: 72px;
+  min-width: 72px;
 }
 
 .product-generator__common-details {
@@ -897,6 +1131,12 @@ button.product-generator__chip {
   padding: 16px 24px;
   background-color: var(--color-background-muted);
   border-top: 1px solid var(--color-foreground-disabled);
+}
+
+.product-generator__footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .product-generator__footer-btn {

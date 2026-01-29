@@ -1,16 +1,7 @@
 import type { Workspace } from "./SelectWorkspace";
+import { TdLogo } from "./icons/TdLogo";
 import { SideNav } from "./SideNav";
 import "./TenantSettings.css";
-
-function TenantLenderIconLarge() {
-  return (
-    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden>
-      <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="2" fill="none" />
-      <circle cx="32" cy="32" r="12" fill="#e6b800" />
-      <circle cx="32" cy="32" r="22" stroke="currentColor" strokeWidth="1.5" fill="none" opacity={0.6} />
-    </svg>
-  );
-}
 
 export function TenantSettings({
   workspace,
@@ -48,7 +39,7 @@ export function TenantSettings({
             <h2 className="tenant-settings__card-title">GENERAL</h2>
             <div className="tenant-settings__general">
               <span className="tenant-settings__icon-wrap">
-                <TenantLenderIconLarge />
+                <TdLogo size={64} />
               </span>
               <div className="tenant-settings__fields">
                 <div className="tenant-settings__field">

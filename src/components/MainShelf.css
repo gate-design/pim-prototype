@@ -276,26 +276,13 @@
   white-space: nowrap;
 }
 
+/* Checkbox column: same border as other cells so row line is one consistent 1px (no ::after double-draw) */
 .main-shelf__th-checkbox,
 .main-shelf__td-checkbox {
   position: relative;
   width: 44px;
   padding: 12px 12px 12px 16px !important;
   vertical-align: middle;
-  border-bottom: none;
-}
-
-/* Draw row separator behind content so it never crosses the checkbox */
-.main-shelf__th-checkbox::after,
-.main-shelf__td-checkbox::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: var(--color-foreground-disabled);
-  z-index: 0;
 }
 
 /* Checkbox cell: full-cell touch target via label so hit area matches visual; no display:flex so cell fills row height */

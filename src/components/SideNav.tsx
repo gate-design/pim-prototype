@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import {
-  Target,
   SidebarSimple,
   Buildings,
   Dresser,
   TagSimple,
   Gear,
   CaretUpDown,
+  CaretRight,
   Check,
   SignOut,
   Plus,
@@ -20,6 +20,11 @@ const SIDE_NAV_WIDTH = 280;
 const DROPDOWN_OFFSET = 4;
 const DROPDOWN_WIDTH = 268; /* min-width 260 + margin */
 const USER_DROPDOWN_EST_HEIGHT = 160;
+
+const LENDERS = [
+  { id: "nesto-residential", name: "TD residential" },
+  { id: "nesto-commercial", name: "TD commercial" },
+];
 const VIEWPORT_PADDING = 16;
 
 const iconProps = { "aria-hidden": true, weight: "regular" as const };
@@ -27,11 +32,6 @@ const icon24 = { ...iconProps, size: 24 };
 const icon20 = { ...iconProps, size: 20 };
 const icon18 = { ...iconProps, size: 18 };
 const icon16 = { ...iconProps, size: 16 };
-
-const LENDERS = [
-  { id: "nesto-residential", name: "TD residential" },
-  { id: "nesto-commercial", name: "TD commercial" },
-];
 
 export type SideNavSection = "shelf" | "product-families";
 
@@ -67,6 +67,7 @@ export function SideNav({
   const tenantRef = useRef<HTMLDivElement>(null);
   const lenderRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
+  const switchLenderLeaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useLayoutEffect(() => {
     if (openDropdown === "tenant" && tenantRef.current) {
@@ -74,8 +75,7 @@ export function SideNav({
       setDropdownPosition({ top: r.top, left: r.right + DROPDOWN_OFFSET });
     } else if ((openDropdown === "lender" || openDropdown === "lender-switch") && lenderRef.current) {
       const r = lenderRef.current.getBoundingClientRect();
-      const left = openDropdown === "lender-switch" ? r.right + DROPDOWN_OFFSET + DROPDOWN_WIDTH + 8 : r.right + DROPDOWN_OFFSET;
-      setDropdownPosition({ top: r.top, left });
+      setDropdownPosition({ top: r.top, left: r.right + DROPDOWN_OFFSET });
     } else if (openDropdown === "user" && userRef.current) {
       const r = userRef.current.getBoundingClientRect();
       let top = r.top;
@@ -99,6 +99,18 @@ export function SideNav({
     document.addEventListener("click", close, true);
     return () => document.removeEventListener("click", close, true);
   }, []);
+
+  useEffect(() => {
+    if (openDropdown !== "lender-switch" && switchLenderLeaveTimeoutRef.current) {
+      clearTimeout(switchLenderLeaveTimeoutRef.current);
+      switchLenderLeaveTimeoutRef.current = null;
+    }
+    return () => {
+      if (switchLenderLeaveTimeoutRef.current) {
+        clearTimeout(switchLenderLeaveTimeoutRef.current);
+      }
+    };
+  }, [openDropdown]);
 
   const closeAll = () => setOpenDropdown(null);
 
@@ -147,7 +159,7 @@ export function SideNav({
                   }}
                 >
                   <div className="side-nav__dropdown-item side-nav__dropdown-item--selected">
-                    <Target {...icon24} />
+                    <TdLogo size={24} />
                     <span>{tenantName}</span>
                     <Check {...icon18} />
                   </div>
@@ -160,18 +172,12 @@ export function SideNav({
                     }}
                   >
                     <Gear {...icon18} />
-                    Tenant settings
+                    <span>Tenant settings</span>
                   </button>
                 </div>,
                 document.body
               )}
           </div>
-
-          <a href="#" className="side-nav__link" onClick={(e) => e.preventDefault()}>
-            <Buildings {...icon24} />
-            <span>Funding sources</span>
-            <span className="side-nav__badge">0</span>
-          </a>
 
           <div className="side-nav__selector-wrap" ref={lenderRef}>
             <button
@@ -179,11 +185,7 @@ export function SideNav({
               className={`side-nav__selector ${openDropdown === "lender" || openDropdown === "lender-switch" ? "side-nav__selector--open" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
-                setOpenDropdown((d) => {
-                  if (d === "lender-switch") return "lender";
-                  if (d === "lender") return null;
-                  return "lender";
-                });
+                setOpenDropdown((d) => (d === "lender" || d === "lender-switch" ? null : "lender"));
               }}
             >
               <span className="side-nav__selector-icon">
@@ -209,7 +211,7 @@ export function SideNav({
                   }}
                 >
                   <div className="side-nav__dropdown-item side-nav__dropdown-item--selected">
-                    <Target {...icon24} />
+                    <TdLogo size={24} />
                     <span>{lenderName}</span>
                     <Check {...icon18} />
                   </div>
@@ -222,16 +224,29 @@ export function SideNav({
                     }}
                   >
                     <Gear {...icon18} />
-                    Lender settings
+                    <span>Lender settings</span>
                   </button>
                   <button
                     type="button"
-                    className={`side-nav__dropdown-item ${openDropdown === "lender-switch" ? "side-nav__dropdown-item--selected" : ""}`}
-                    onClick={() => setOpenDropdown((d) => (d === "lender-switch" ? "lender" : "lender-switch"))}
+                    className={`side-nav__dropdown-item side-nav__dropdown-item--switch-lender ${openDropdown === "lender-switch" ? "side-nav__dropdown-item--selected" : ""}`}
+                    onClick={() => setOpenDropdown(null)}
+                    onMouseEnter={() => {
+                      if (switchLenderLeaveTimeoutRef.current) {
+                        clearTimeout(switchLenderLeaveTimeoutRef.current);
+                        switchLenderLeaveTimeoutRef.current = null;
+                      }
+                      setOpenDropdown("lender-switch");
+                    }}
+                    onMouseLeave={() => {
+                      switchLenderLeaveTimeoutRef.current = setTimeout(() => {
+                        switchLenderLeaveTimeoutRef.current = null;
+                        setOpenDropdown("lender");
+                      }, 150);
+                    }}
                   >
                     <Buildings {...icon18} />
-                    Switch lender
-                    <CaretUpDown {...icon16} />
+                    <span>Switch lender</span>
+                    <CaretRight {...icon16} />
                   </button>
                 </div>,
                 document.body
@@ -248,13 +263,20 @@ export function SideNav({
                     top: dropdownPosition.top,
                     zIndex: 1001,
                   }}
+                  onMouseEnter={() => {
+                    if (switchLenderLeaveTimeoutRef.current) {
+                      clearTimeout(switchLenderLeaveTimeoutRef.current);
+                      switchLenderLeaveTimeoutRef.current = null;
+                    }
+                  }}
+                  onMouseLeave={() => setOpenDropdown("lender")}
                 >
                   {LENDERS.map((l) => (
                     <div
                       key={l.id}
                       className={`side-nav__dropdown-item ${lenderName === l.name ? "side-nav__dropdown-item--selected" : ""}`}
                     >
-                      <Target {...icon24} />
+                      <TdLogo size={24} />
                       <span>{l.name}</span>
                       {lenderName === l.name && <Check {...icon18} />}
                     </div>

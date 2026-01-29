@@ -29,12 +29,6 @@ function FilterIcon() {
   );
 }
 
-const TABS = [
-  { id: "mortgage", label: "Mortgage", active: true },
-  { id: "line", label: "Line of credit", active: false },
-  { id: "loanform", label: "Loan", active: false },
-];
-
 function formatRate(value: number | undefined): string {
   return value != null ? `${Number(value).toFixed(2)}%` : "—";
 }
@@ -129,18 +123,6 @@ export function MainShelf({
               </Button>
             </div>
           </header>
-
-          <div className="main-shelf__tabs">
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                className={`main-shelf__tab ${tab.active ? "main-shelf__tab--active" : ""}`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
 
           <div className="main-shelf__toolbar">
             <button type="button" className="main-shelf__filters-btn">

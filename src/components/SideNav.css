@@ -383,6 +383,7 @@
 .side-nav__dropdown-item {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
   width: 100%;
   padding: 10px 12px;
@@ -395,10 +396,17 @@
   cursor: pointer;
   text-align: left;
   transition: background 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
 }
 
 .side-nav__dropdown-item:hover {
   background: var(--color-primary-200);
+}
+
+.side-nav__dropdown-item--switch-lender:hover {
+  justify-content: center;
 }
 
 .side-nav__dropdown-item svg:first-of-type {
@@ -411,11 +419,17 @@
   min-width: 0;
 }
 
+/* Only push trailing icon right when the last child is an svg (e.g. Switch lender, selected row) */
+.side-nav__dropdown-item svg:last-child {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 .side-nav__dropdown-item--selected {
   font-weight: 600;
 }
 
-.side-nav__dropdown-item--selected svg:last-of-type {
+.side-nav__dropdown-item--selected svg:last-child {
   color: var(--color-primary-500);
 }
 

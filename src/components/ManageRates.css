@@ -89,7 +89,7 @@
 
 .manage-rates__scroll-content {
   width: 100%;
-  max-width: 720px;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -203,7 +203,7 @@
   gap: 4px;
 }
 
-/* Row of rate fields (Base rate, Lender spread, Investor spread, Net rate) — fill width, min 320px each */
+/* Row of rate fields (Base rate, Lender spread, Investor spread, Net rate) — all on one line */
 .manage-rates__rate-fields-row {
   display: flex;
   flex-wrap: wrap;
@@ -213,8 +213,8 @@
 }
 
 .manage-rates__rate-field {
-  flex: 1 1 320px;
-  min-width: 320px;
+  flex: 1 1 180px;
+  min-width: 180px;
   width: auto;
   margin-bottom: 0;
 }
@@ -398,11 +398,11 @@ input.manage-rates__input.manage-rates__input--date {
   border-right: 1px solid #d1d1d1;
 }
 
-/* Subrate row — each in a small card */
+/* Subrate row — each in a small card, single row: Subrate | Type | Rate / Rate adjustment | Calculated rate | Delete */
 .manage-rates__subrate-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
   padding: 16px;
   margin-bottom: 12px;
   background-color: var(--color-background-muted);
@@ -419,25 +419,22 @@ input.manage-rates__input.manage-rates__input--date {
   align-items: flex-end;
   gap: 12px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
-.manage-rates__subrate-row--first .manage-rates__subrate-field {
+.manage-rates__subrate-row .manage-rates__subrate-field {
   flex: 1;
-  min-width: 0;
+  min-width: 140px;
 }
 
-.manage-rates__subrate-row--first .manage-rates__delete-btn {
-  margin-left: auto;
+.manage-rates__subrate-row .manage-rates__subrate-calc {
+  margin-left: 0;
   flex-shrink: 0;
 }
 
-.manage-rates__subrate-row--second {
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-
-.manage-rates__subrate-row--second .manage-rates__subrate-calc {
+.manage-rates__subrate-row .manage-rates__delete-btn {
   margin-left: auto;
+  flex-shrink: 0;
 }
 
 .manage-rates__subrate-field {

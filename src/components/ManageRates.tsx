@@ -351,7 +351,7 @@ export function ManageRates({
 
                   {subrates.map((row) => (
                     <div key={row.id} className="manage-rates__subrate-card">
-                      <div className="manage-rates__subrate-row manage-rates__subrate-row--first">
+                      <div className="manage-rates__subrate-row">
                         <div className="manage-rates__subrate-field">
                           <label className="manage-rates__label">Subrate</label>
                           <select
@@ -380,16 +380,6 @@ export function ManageRates({
                             ))}
                           </select>
                         </div>
-                        <button
-                          type="button"
-                          className="manage-rates__delete-btn"
-                          onClick={() => removeSubrate(row.id)}
-                          aria-label="Remove subrate"
-                        >
-                          <TrashSimple size={16} weight="regular" aria-hidden />
-                        </button>
-                      </div>
-                      <div className="manage-rates__subrate-row manage-rates__subrate-row--second">
                         <div className="manage-rates__subrate-field">
                           {row.valueType === "Static" ? (
                             <>
@@ -440,6 +430,14 @@ export function ManageRates({
                           )}
                         </div>
                         <span className="manage-rates__subrate-calc">Calculated rate: <span className="manage-rates__rate-badge">{subrateCalculated(row).toFixed(2)}%</span></span>
+                        <button
+                          type="button"
+                          className="manage-rates__delete-btn"
+                          onClick={() => removeSubrate(row.id)}
+                          aria-label="Remove subrate"
+                        >
+                          <TrashSimple size={16} weight="regular" aria-hidden />
+                        </button>
                       </div>
                     </div>
                   ))}

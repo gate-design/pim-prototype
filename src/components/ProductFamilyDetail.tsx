@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { ArrowLeft, CaretDown, Check, Plus, TrashSimple } from "@phosphor-icons/react";
+import { useState } from "react";
+import { ArrowLeft, CaretDown, Plus, TrashSimple } from "@phosphor-icons/react";
 import type { Workspace } from "./SelectWorkspace";
 import { Button } from "./ui/Button";
 import { SideNav } from "./SideNav";

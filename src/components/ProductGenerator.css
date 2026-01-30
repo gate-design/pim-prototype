@@ -227,6 +227,7 @@
   font-weight: 600;
   color: var(--color-foreground);
   line-height: 1.3;
+  text-transform: none;
 }
 
 .product-generator__section-title {

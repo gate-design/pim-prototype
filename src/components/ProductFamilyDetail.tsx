@@ -115,7 +115,7 @@ export function ProductFamilyDetail({
                     {/* GENERAL */}
                     <div className="product-generator__card">
                       <div className="product-generator__card-header">
-                        <h3 className="product-generator__card-title">GENERAL</h3>
+                        <h3 className="product-generator__card-title">General</h3>
                       </div>
                       <div className="product-generator__subsection">
                         <div className="product-generator__general-fields">
@@ -172,7 +172,7 @@ export function ProductFamilyDetail({
                     {/* DETAILS */}
                     <div className="product-generator__card">
                       <div className="product-generator__card-header">
-                        <h3 className="product-generator__card-title">DETAILS</h3>
+                        <h3 className="product-generator__card-title">Details</h3>
                       </div>
                       <div className="product-generator__subsection product-generator__subsection--inline">
                         <div className="product-generator__general-fields">
@@ -229,7 +229,7 @@ export function ProductFamilyDetail({
                     {/* MORTGAGE FIELDS */}
                     <div className="product-generator__card">
                       <div className="product-generator__card-header">
-                        <h3 className="product-generator__card-title">MORTGAGE FIELDS</h3>
+                        <h3 className="product-generator__card-title">Mortgage fields</h3>
                       </div>
                       <div className="product-generator__subsection product-generator__subsection--inline">
                         <div className="product-generator__general-fields">
@@ -419,7 +419,7 @@ export function ProductFamilyDetail({
                     {/* FAMILY ATTRIBUTE */}
                     <div className="product-generator__card">
                       <div className="product-generator__card-header">
-                        <h3 className="product-generator__card-title">FAMILY ATTRIBUTE</h3>
+                        <h3 className="product-generator__card-title">Family attribute</h3>
                       </div>
                       <div className="product-generator__subsection">
                         <div className="product-generator__general-fields">
@@ -460,7 +460,7 @@ export function ProductFamilyDetail({
                     {/* SERVICEABLE */}
                     <div className="product-generator__card">
                       <div className="product-generator__card-header product-family-detail__card-header-with-toggle">
-                        <h3 className="product-generator__card-title">SERVICEABLE</h3>
+                        <h3 className="product-generator__card-title">Serviceable</h3>
                         <label className="product-generator__toggle">
                           <input
                             type="checkbox"

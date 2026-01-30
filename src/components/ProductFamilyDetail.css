@@ -1,3 +1,5 @@
+/* Product Family Detail — layout aligned with ProductGenerator (white cards, scroll, section-body) */
+
 .product-family-detail {
   position: fixed;
   inset: 0;
@@ -10,42 +12,59 @@
 .product-family-detail__body {
   flex: 1;
   display: flex;
+  flex-direction: row;
   min-height: 0;
+  overflow: hidden;
 }
 
-.product-family-detail__content {
+.product-family-detail__main {
   flex: 1;
-  overflow-y: auto;
-  padding: 24px 24px 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.product-family-detail__header {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 24px 0 0 0;
+  box-sizing: border-box;
 }
 
 .product-family-detail__breadcrumb {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 24px;
+  margin: 0 24px 16px 24px;
   font-size: 14px;
+  color: var(--color-foreground-secondary);
 }
 
-.product-family-detail__back {
+.product-family-detail__breadcrumb-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: none;
   border: none;
-  padding: 0;
-  font: inherit;
   color: var(--color-primary-500);
   cursor: pointer;
-  text-decoration: underline;
+  padding: 0;
+  font: inherit;
 }
 
-.product-family-detail__back:hover {
+.product-family-detail__breadcrumb-back:hover {
+  color: var(--color-primary-500);
   text-decoration: none;
 }
 
-.product-family-detail__sep {
+.product-family-detail__breadcrumb-sep {
   color: var(--color-foreground-disabled);
 }
 
-.product-family-detail__name {
+.product-family-detail__breadcrumb-title {
   font-weight: 700;
   color: var(--color-foreground);
   flex: 1;
@@ -60,89 +79,96 @@
   cursor: pointer;
 }
 
+.product-family-detail__main-row {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.product-family-detail__scroll {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 24px 100px;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.product-family-detail__scroll-content {
+  flex: 1;
+  min-width: 0;
+  align-self: flex-start;
+}
+
 .product-family-detail__section {
-  margin-bottom: 32px;
-  max-width: 720px;
-}
-
-.product-family-detail__section-title {
-  margin: 0 0 16px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--color-foreground-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.product-family-detail__field {
-  margin-bottom: 16px;
-}
-
-.product-family-detail__field label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-foreground-secondary);
-}
-
-.product-family-detail__input,
-.product-family-detail__select,
-.product-family-detail__textarea {
   width: 100%;
-  max-width: 480px;
-  padding: 10px 14px;
-  font-family: var(--font-body);
+}
+
+.product-family-detail__section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* SERVICEABLE card header: title left, toggle right */
+.product-family-detail__card-header-with-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.product-family-detail__card-header-with-toggle .product-generator__toggle {
+  flex-shrink: 0;
+}
+
+/* Input with unit suffix (e.g. % for percent fields) */
+.product-family-detail__input-with-unit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.product-family-detail__input-with-unit .product-generator__input {
+  flex: 1;
+  min-width: 0;
+}
+
+.product-family-detail__unit {
   font-size: 14px;
-  color: var(--color-foreground);
-  background: var(--color-surface);
-  border: 1px solid var(--color-foreground-disabled);
-  border-radius: 8px;
-}
-
-.product-family-detail__textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.product-family-detail__link {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 14px;
-  color: var(--color-primary-500);
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.product-family-detail__link:hover {
-  text-decoration: none;
+  color: var(--color-foreground-secondary);
+  flex-shrink: 0;
 }
 
 .product-family-detail__footer {
-  position: fixed;
+  position: sticky;
   bottom: 0;
-  left: 280px;
+  left: 0;
   right: 0;
   padding: 16px 24px;
   background: var(--color-surface);
   border-top: 1px solid var(--color-foreground-disabled);
   display: flex;
   justify-content: flex-end;
+  flex-shrink: 0;
 }
 
 .product-family-detail__save {
-  padding: 12px 24px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  background: #c53030;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.product-family-detail__save:hover {
-  background: #9b2323;
+  /* Uses Button component with intent="brand" for green Save */
 }
